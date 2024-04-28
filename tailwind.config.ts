@@ -1,14 +1,25 @@
+import type { Config } from "tailwindcss";
+
 export default {
   content: ["./src/**/*.{html,tsx}", "./index.html"],
+  /**
+   * Theme configuration.
+   * Clamps use
+   * - minimum viewport width: 500px
+   * - maximum viewport width: 1600px
+   */
+
   theme: {
     extend: {
       spacing: {
-        default: "clamp(1rem, 1.3333vw + .5rem, 2rem)",
+        default: "clamp(1rem, 0.727vw + 0.773rem, 1.5rem)",
       },
       colors: {
         white: "#fdfcfd",
-        light: "#f9f5f8",
-        dark: "#1d1d1d",
+        light: "#f3f3f3",
+        blue: "#698996",
+        dark: "#222831",
+        black: "#1d1d1d",
       },
       keyframes: {
         spin: {
@@ -23,4 +34,4 @@ export default {
     },
   },
   plugins: [],
-} as Record<string, unknown>;
+} satisfies Config;
