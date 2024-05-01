@@ -1,5 +1,10 @@
 import roundToThreeDecimals from "./roundToThreeDecimals";
 
+type GenerateClampResult = {
+    result?: string;
+    errors?: { param: string; message: string }[];
+};
+
 /**
  * Generates a CSS clamp() function value for responsive design.
  *
@@ -12,58 +17,104 @@ import roundToThreeDecimals from "./roundToThreeDecimals";
  * @returns {string} The CSS clamp() function value.
  */
 const generateClamp = (
-  minViewportWidth: number,
-  maxViewportWidth: number,
-  minValue: number,
-  maxValue: number,
-  unit: "px" | "rem",
-  remSize: number,
-) => {
-  // Check for invalid input
-  if (minViewportWidth === maxViewportWidth) {
-    throw new Error("minViewportWidth and maxViewportWidth cannot be equal");
-  }
-  if (minViewportWidth > maxViewportWidth) {
-    throw new Error("minViewportWidth cannot be greater than maxViewportWidth");
-  }
-  if (
-    minValue < 0 ||
-    maxValue < 0 ||
-    minViewportWidth < 0 ||
-    maxViewportWidth < 0
-  ) {
-    throw new Error("Values cannot be negative");
-  }
-  if (unit !== "px" && unit !== "rem") {
-    throw new Error("Unit must be either 'px' or 'rem'");
-  }
-  if (remSize <= 0) {
-    throw new Error("remSize must be a positive number");
-  }
+    minViewportWidth: number,
+    maxViewportWidth: number,
+    minValue: number,
+    maxValue: number,
+    unit: "px" | "rem",
+    remSize: number,
+): GenerateClampResult => {
+    const errors = [];
 
-  // Convert sizes to pixels if unit is 'rem'
-  const minValuePx = unit === "rem" ? minValue * remSize : minValue;
-  const maxValuePx = unit === "rem" ? maxValue * remSize : maxValue;
+    // Check for invalid input.
+    if (minViewportWidth === maxViewportWidth) {
+        errors.push({
+            param: "minViewportWidth",
+            message: "minViewportWidth and maxViewportWidth cannot be equal",
+        });
+        errors.push({
+            param: "maxViewportWidth",
+            message: "minViewportWidth and maxViewportWidth cannot be equal",
+        });
+    }
+    if (minViewportWidth > maxViewportWidth) {
+        errors.push({
+            param: "minViewportWidth",
+            message: "minViewportWidth cannot be greater than maxViewportWidth",
+        });
+    }
+    if (minValue < 0) {
+        errors.push({
+            param: "minValue",
+            message: "minValue cannot be negative",
+        });
+    }
+    if (maxValue < 0) {
+        errors.push({
+            param: "maxValue",
+            message: "maxValue cannot be negative",
+        });
+    }
+    if (minViewportWidth < 0) {
+        errors.push({
+            param: "minViewportWidth",
+            message: "minViewportWidth cannot be negative",
+        });
+    }
+    if (maxViewportWidth < 0) {
+        errors.push({
+            param: "maxViewportWidth",
+            message: "maxViewportWidth cannot be negative",
+        });
+    }
+    if (unit !== "px" && unit !== "rem") {
+        errors.push({
+            param: "unit",
+            message: "Unit must be either 'px' or 'rem'",
+        });
+    }
+    if (remSize <= 0) {
+        errors.push({
+            param: "remSize",
+            message: "remSize must be a positive number",
+        });
+    }
 
-  // Calculate the slope of the line representing the rate of change of the value (in pixels) with respect to the viewport width
-  const slope =
-    (maxValuePx - minValuePx) / (maxViewportWidth - minViewportWidth);
+    if (errors.length > 0) {
+        return { errors };
+    }
 
-  // Calculate the y-intercept, which represents the starting value (in pixels) when the viewport width is at its minimum
-  const intercept = minValuePx - slope * minViewportWidth;
+    // Convert sizes to pixels if unit is 'rem'.
+    const minValuePx = unit === "rem" ? minValue * remSize : minValue;
+    const maxValuePx = unit === "rem" ? maxValue * remSize : maxValue;
 
-  // Convert slope and intercept to correct units
-  const slopeVw = roundToThreeDecimals(slope * 100);
-  const interceptRem = roundToThreeDecimals(intercept / remSize);
+    /**
+     * Calculate the slope of the line representing the rate of change of the value (in pixels)
+     * with respect to the viewport width.
+     */
+    const slope =
+        (maxValuePx - minValuePx) / (maxViewportWidth - minViewportWidth);
 
-  // Check if slopeVw and interceptRem are negative
-  const slopeStr = slopeVw < 0 ? `- ${Math.abs(slopeVw)}vw` : `${slopeVw}vw`;
-  const interceptStr =
-    interceptRem < 0
-      ? `- ${Math.abs(interceptRem)}rem`
-      : `+ ${interceptRem}rem`;
+    /**
+     * Calculate the y-intercept, which represents the starting value (in pixels)
+     * when the viewport width is at its minimum.
+     */
+    const intercept = minValuePx - slope * minViewportWidth;
 
-  return `clamp(${roundToThreeDecimals(minValuePx / remSize)}rem, ${slopeStr} ${interceptStr}, ${roundToThreeDecimals(maxValuePx / remSize)}rem)`;
+    // Convert slope and intercept to correct units.
+    const slopeVw = roundToThreeDecimals(slope * 100);
+    const interceptRem = roundToThreeDecimals(intercept / remSize);
+
+    // Check if slopeVw and interceptRem are negative.
+    const slopeStr = slopeVw < 0 ? `- ${Math.abs(slopeVw)}vw` : `${slopeVw}vw`;
+    const interceptStr =
+        interceptRem < 0
+            ? `- ${Math.abs(interceptRem)}rem`
+            : `+ ${interceptRem}rem`;
+
+    return {
+        result: `clamp(${roundToThreeDecimals(minValuePx / remSize)}rem, ${slopeStr} ${interceptStr}, ${roundToThreeDecimals(maxValuePx / remSize)}rem)`,
+    };
 };
 
 export default generateClamp;
