@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 
 // Components
 import Input from "./Input";
 import RadioButtons from "./RadioButtons";
+import Button from "./Button";
 
 // Store
 import { useStore } from "../store/uiToolsStore";
 
 // Helpers
 import generateClamp from "../helpers/generateClamp";
+
+// Hooks
+import useTypingEffect from "../hooks/useTypingEffect";
 
 /**
  * A component that generates a CSS clamp value based on user input.
@@ -63,71 +67,37 @@ const ClampGenerator = (): JSX.Element => {
     }));
 
     /**
-     * Errors
-     */
-    const [minViewportWidthError, setMinViewportWidthError] = useState<
-        string | null
-    >(null);
-    const [maxViewportWidthError, setMaxViewportWidthError] = useState<
-        string | null
-    >(null);
-    const [minValueError, setMinValueError] = useState<string | null>(null);
-    const [maxValueError, setMaxValueError] = useState<string | null>(null);
-    const [remSizeError, setRemSizeError] = useState<string | null>(null);
-
-    /**
      * The generated clamp value.
      */
     const [clampValue, setClampValue] = useState("");
 
     /**
-     * Set error states based on the errors returned from the generateClamp function.
-     * @param errors - The errors returned from the generateClamp function.
+     * Error handling.
      */
-    const setErrors = (errors: { param: string; message: string }[]) => {
-        errors.forEach(({ param, message }) => {
-            switch (param) {
-                case "minViewportWidth":
-                    setMinViewportWidthError((prev) =>
-                        prev ? `${prev}\n${message}` : message,
-                    );
-                    break;
-                case "maxViewportWidth":
-                    setMaxViewportWidthError((prev) =>
-                        prev ? `${prev}\n${message}` : message,
-                    );
-                    break;
-                case "minValue":
-                    setMinValueError((prev) =>
-                        prev ? `${prev}\n${message}` : message,
-                    );
-                    break;
-                case "maxValue":
-                    setMaxValueError((prev) =>
-                        prev ? `${prev}\n${message}` : message,
-                    );
-                    break;
-                case "remSize":
-                    setRemSizeError((prev) =>
-                        prev ? `${prev}\n${message}` : message,
-                    );
-                    break;
-                default:
-                    break;
-            }
-        });
+    type ErrorFields = {
+        minViewportWidth?: string;
+        maxViewportWidth?: string;
+        minValue?: string;
+        maxValue?: string;
+        remSize?: string;
     };
 
-    /**
-     * Clear error states.
-     */
-    const clearErrors = () => {
-        setMinViewportWidthError(null);
-        setMaxViewportWidthError(null);
-        setMinValueError(null);
-        setMaxValueError(null);
-        setRemSizeError(null);
-    };
+    const [errors, setErrors] = useState<ErrorFields>({});
+    const [errorMessages, setErrorMessages] = useState("");
+
+    // We set error messages when the errors object changes.
+    useEffect(() => {
+        setErrorMessages(
+            Object.values(errors)
+                .filter((error, index, self) => self.indexOf(error) === index)
+                .join("\n"),
+        );
+    }, [errors]);
+
+    const TYPING_SPEED = 20;
+    const VARIANCE = 40;
+    const typedErrors = useTypingEffect(errorMessages, TYPING_SPEED, VARIANCE);
+    const typedClampValue = useTypingEffect(clampValue, TYPING_SPEED, VARIANCE);
 
     /**
      * Handle the form submission event.
@@ -136,9 +106,9 @@ const ClampGenerator = (): JSX.Element => {
     const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        clearErrors();
+        setErrors({});
 
-        const { result, errors } = generateClamp(
+        const { result, errors: newErrors } = generateClamp(
             minViewportWidth,
             maxViewportWidth,
             minValue,
@@ -147,8 +117,12 @@ const ClampGenerator = (): JSX.Element => {
             remSize,
         );
 
-        if (errors) {
-            setErrors(errors);
+        if (newErrors) {
+            const errorObject: ErrorFields = newErrors.reduce((acc, curr) => {
+                return { ...acc, [curr.param]: curr.message };
+            }, {});
+
+            setErrors(errorObject);
         } else {
             typeof result === "string" && setClampValue(result);
         }
@@ -157,35 +131,34 @@ const ClampGenerator = (): JSX.Element => {
     return (
         <section className="z-10">
             <h2>Clamp Generator</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
             <form onSubmit={submitHandler} className="flex flex-col gap-2">
                 <Input
                     type="number"
                     onChange={setMinViewportWidth}
                     label="Min viewport width"
                     value={String(minViewportWidth)}
-                    error={minViewportWidthError}
+                    error={errors.minViewportWidth !== undefined}
                 />
                 <Input
                     type="number"
                     onChange={setMaxViewportWidth}
                     label="Max viewport width"
                     value={String(maxViewportWidth)}
-                    error={maxViewportWidthError}
+                    error={errors.maxViewportWidth !== undefined}
                 />
                 <Input
                     type="number"
                     onChange={setMinValue}
                     label="Min value"
                     value={String(minValue)}
-                    error={minValueError}
+                    error={errors.minValue !== undefined}
                 />
                 <Input
                     type="number"
                     onChange={setMaxValue}
                     label="Max value"
                     value={String(maxValue)}
-                    error={maxValueError}
+                    error={errors.maxValue !== undefined}
                 />
                 <RadioButtons
                     name="unit"
@@ -201,16 +174,22 @@ const ClampGenerator = (): JSX.Element => {
                     onChange={setRemSize}
                     label="Rem size"
                     value={String(remSize)}
-                    error={remSizeError}
+                    error={errors.remSize !== undefined}
                 />
-                <button
-                    type="submit"
-                    className="w-fit border bg-blue px-4 py-2 text-light"
-                >
-                    Clamp!
-                </button>
+                <Button type="submit" label="Generate Clamp" />
             </form>
-            <p>CLAMP: {clampValue}</p>
+            {typedErrors ? (
+                <div className="block text-red-800">
+                    {typedErrors.split("\n").map((line, index) => (
+                        <Fragment key={index}>
+                            {line}
+                            <br />
+                        </Fragment>
+                    ))}
+                </div>
+            ) : (
+                <p>{typedClampValue}</p>
+            )}
         </section>
     );
 };

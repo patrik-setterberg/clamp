@@ -27,44 +27,38 @@ const generateClamp = (
     const errors = [];
 
     // Check for invalid input.
-    if (minViewportWidth === maxViewportWidth) {
+    if (minViewportWidth >= maxViewportWidth) {
         errors.push({
             param: "minViewportWidth",
-            message: "minViewportWidth and maxViewportWidth cannot be equal",
+            message: "Maximum viewport width must be greater than minimum viewport width.",
         });
         errors.push({
             param: "maxViewportWidth",
-            message: "minViewportWidth and maxViewportWidth cannot be equal",
-        });
-    }
-    if (minViewportWidth > maxViewportWidth) {
-        errors.push({
-            param: "minViewportWidth",
-            message: "minViewportWidth cannot be greater than maxViewportWidth",
+            message: "Maximum viewport width must be greater than minimum viewport width.",
         });
     }
     if (minValue < 0) {
         errors.push({
             param: "minValue",
-            message: "minValue cannot be negative",
+            message: "Value cannot be negative.",
         });
     }
     if (maxValue < 0) {
         errors.push({
             param: "maxValue",
-            message: "maxValue cannot be negative",
+            message: "Value cannot be negative.",
         });
     }
     if (minViewportWidth < 0) {
         errors.push({
             param: "minViewportWidth",
-            message: "minViewportWidth cannot be negative",
+            message: "Value cannot be negative.",
         });
     }
     if (maxViewportWidth < 0) {
         errors.push({
             param: "maxViewportWidth",
-            message: "maxViewportWidth cannot be negative",
+            message: "Value cannot be negative.",
         });
     }
     if (unit !== "px" && unit !== "rem") {
@@ -76,7 +70,7 @@ const generateClamp = (
     if (remSize <= 0) {
         errors.push({
             param: "remSize",
-            message: "remSize must be a positive number",
+            message: "Rem size must be a positive number.",
         });
     }
 

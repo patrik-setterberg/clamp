@@ -1,6 +1,11 @@
 import clsx from "clsx/lite";
 
-type ButtonProps = { classNames?: string; label: string; func: () => void };
+type ButtonProps = {
+    type?: "button" | "submit" | "reset";
+    classNames?: string;
+    label: string;
+    onClick?: () => void;
+};
 
 /**
  * Button component.
@@ -12,7 +17,7 @@ type ButtonProps = { classNames?: string; label: string; func: () => void };
  * @returns {JSX.Element} The rendered button component.
  */
 const Button = (props: ButtonProps): JSX.Element => {
-    const { classNames, label, func } = props;
+    const { type = "button", classNames, label, onClick } = props;
 
     const defaultClasses =
         "py-2 px-4 rounded-md bg-blue text-light transition-colors duration-100 ease-out font-semibold w-fit";
@@ -23,6 +28,7 @@ const Button = (props: ButtonProps): JSX.Element => {
 
     return (
         <button
+            type={type}
             className={clsx(
                 defaultClasses,
                 hoverClasses,
@@ -30,7 +36,7 @@ const Button = (props: ButtonProps): JSX.Element => {
                 activeClasses,
                 classNames,
             )}
-            onClick={func}
+            onClick={onClick}
         >
             {label}
         </button>

@@ -5,7 +5,7 @@ type InputProps = {
     value: string;
     onChange: (value: number) => void;
     label: string;
-    error: string | null;
+    error: boolean;
 };
 
 
@@ -39,7 +39,7 @@ const Input = ({
                 className={clsx("px-4 py-2 text-light", error && "border border-red-500")}
                 aria-label={label}
             />
-            {error && <span>{error}</span>}
+            {/* {error && <span>{error}</span>} */}
         </label>
     );
 };
