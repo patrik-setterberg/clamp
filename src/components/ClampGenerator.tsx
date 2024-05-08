@@ -1,8 +1,7 @@
 import { useEffect, useState, Fragment } from "react";
 
 // Components
-import Input from "./Input";
-import RadioButtons from "./RadioButtons";
+import NumberInputWithSelect from "./NumberInputWithSelect";
 import Button from "./Button";
 
 // Store
@@ -27,6 +26,16 @@ const ClampGenerator = (): JSX.Element => {
     }));
 
     /**
+     * The unit of the minimum viewport width.
+     */
+    const { minViewportWidthUnit, setMinViewportWidthUnit } = useStore(
+        (state) => ({
+            minViewportWidthUnit: state.minViewportWidthUnit,
+            setMinViewportWidthUnit: state.setMinViewportWidthUnit,
+        }),
+    );
+
+    /**
      * The maximum viewport width value.
      */
     const { maxViewportWidth, setMaxViewportWidth } = useStore((state) => ({
@@ -35,11 +44,29 @@ const ClampGenerator = (): JSX.Element => {
     }));
 
     /**
+     * The unit of the maximum viewport width.
+     */
+    const { maxViewportWidthUnit, setMaxViewportWidthUnit } = useStore(
+        (state) => ({
+            maxViewportWidthUnit: state.maxViewportWidthUnit,
+            setMaxViewportWidthUnit: state.setMaxViewportWidthUnit,
+        }),
+    );
+
+    /**
      * The minimum value for the clamp.
      */
     const { minValue, setMinValue } = useStore((state) => ({
         minValue: state.minValue,
         setMinValue: state.setMinValue,
+    }));
+
+    /**
+     * The unit of the minimum value for the clamp.
+     */
+    const { minValueUnit, setMinValueUnit } = useStore((state) => ({
+        minValueUnit: state.minValueUnit,
+        setMinValueUnit: state.setMinValueUnit,
     }));
 
     /**
@@ -51,19 +78,18 @@ const ClampGenerator = (): JSX.Element => {
     }));
 
     /**
-     * The unit of measurement for the clamp value.
+     * The unit of the maximum value for the clamp.
      */
-    const { unit, setUnit } = useStore((state) => ({
-        unit: state.unit,
-        setUnit: state.setUnit,
+    const { maxValueUnit, setMaxValueUnit } = useStore((state) => ({
+        maxValueUnit: state.maxValueUnit,
+        setMaxValueUnit: state.setMaxValueUnit,
     }));
 
     /**
      * The base font size in pixels for calculating rem values.
      */
-    const { remSize, setRemSize } = useStore((state) => ({
+    const { remSize } = useStore((state) => ({
         remSize: state.remSize,
-        setRemSize: state.setRemSize,
     }));
 
     /**
@@ -110,10 +136,13 @@ const ClampGenerator = (): JSX.Element => {
 
         const { result, errors: newErrors } = generateClamp(
             minViewportWidth,
+            minViewportWidthUnit,
             maxViewportWidth,
+            maxViewportWidthUnit,
             minValue,
+            minValueUnit,
             maxValue,
-            unit as "px" | "rem",
+            maxValueUnit,
             remSize,
         );
 
@@ -129,57 +158,55 @@ const ClampGenerator = (): JSX.Element => {
     };
 
     return (
-        <section className="z-10">
-            <h2>Clamp Generator</h2>
-            <form onSubmit={submitHandler} className="flex flex-col gap-2">
-                <Input
-                    type="number"
-                    onChange={setMinViewportWidth}
+        <section className="">
+            <div className="">
+                <h2 className="mb-10 text-lg font-bold uppercase">
+                    Clamp Generator
+                </h2>
+            </div>
+
+            <form
+                onSubmit={submitHandler}
+                className="grid grid-cols-2 gap-x-3 gap-y-4"
+            >
+                <NumberInputWithSelect
                     label="Min viewport width"
-                    value={String(minViewportWidth)}
+                    inputValue={String(minViewportWidth)}
+                    inputOnChange={setMinViewportWidth}
+                    selectValue={minViewportWidthUnit}
+                    selectOnChange={setMinViewportWidthUnit}
                     error={errors.minViewportWidth !== undefined}
                 />
-                <Input
-                    type="number"
-                    onChange={setMaxViewportWidth}
+                <NumberInputWithSelect
                     label="Max viewport width"
-                    value={String(maxViewportWidth)}
+                    inputValue={String(maxViewportWidth)}
+                    inputOnChange={setMaxViewportWidth}
+                    selectValue={maxViewportWidthUnit}
+                    selectOnChange={setMaxViewportWidthUnit}
                     error={errors.maxViewportWidth !== undefined}
                 />
-                <Input
-                    type="number"
-                    onChange={setMinValue}
+                <NumberInputWithSelect
                     label="Min value"
-                    value={String(minValue)}
+                    inputValue={String(minValue)}
+                    inputOnChange={setMinValue}
+                    selectValue={minValueUnit}
+                    selectOnChange={setMinValueUnit}
                     error={errors.minValue !== undefined}
                 />
-                <Input
-                    type="number"
-                    onChange={setMaxValue}
+                <NumberInputWithSelect
                     label="Max value"
-                    value={String(maxValue)}
+                    inputValue={String(maxValue)}
+                    inputOnChange={setMaxValue}
+                    selectValue={maxValueUnit}
+                    selectOnChange={setMaxValueUnit}
                     error={errors.maxValue !== undefined}
                 />
-                <RadioButtons
-                    name="unit"
-                    items={[
-                        { label: "px", value: "px" },
-                        { label: "rem", value: "rem" },
-                    ]}
-                    selectedValue={unit}
-                    onChange={setUnit}
-                />
-                <Input
-                    type="number"
-                    onChange={setRemSize}
-                    label="Rem size"
-                    value={String(remSize)}
-                    error={errors.remSize !== undefined}
-                />
-                <Button type="submit" label="Generate Clamp" />
+                <div className="col-span-2 mt-4 flex justify-start">
+                    <Button type="submit" label="Generate Clamp" />
+                </div>
             </form>
             {typedErrors ? (
-                <div className="block text-red-800">
+                <div className="monospace block text-red-800">
                     {typedErrors.split("\n").map((line, index) => (
                         <Fragment key={index}>
                             {line}
@@ -188,7 +215,7 @@ const ClampGenerator = (): JSX.Element => {
                     ))}
                 </div>
             ) : (
-                <p>{typedClampValue}</p>
+                <p className="monospace">{typedClampValue}</p>
             )}
         </section>
     );

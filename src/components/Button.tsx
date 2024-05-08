@@ -20,10 +20,10 @@ const Button = (props: ButtonProps): JSX.Element => {
     const { type = "button", classNames, label, onClick } = props;
 
     const defaultClasses =
-        "py-2 px-4 rounded-md bg-blue text-light transition-colors duration-100 ease-out font-semibold w-fit";
+        "py-2 px-4 rounded-full bg-slate text-light transition-colors duration-100 ease-out font-semibold w-fit";
     const hoverClasses = "hover:bg-dark hover:text-white";
     const focusClasses =
-        "focus:outline-dashed focus:outline-blue focus:outline-offset-2 hover:focus:outline-dark focus:outline-2";
+        "focus:outline-dashed focus:outline-slate focus:outline-offset-2 hover:focus:outline-onyx focus:outline-2";
     const activeClasses = "active:transform active:scale-95 active:bg-dark";
 
     return (

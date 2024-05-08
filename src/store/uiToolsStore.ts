@@ -3,29 +3,34 @@ import { persist, PersistStorage } from "zustand/middleware";
 
 // Clamp generator state values for the store.
 type ClampGeneratorStateValues = {
-    minViewportWidth: number; // The minimum viewport width.
-    maxViewportWidth: number; // The maximum viewport width.
-    minValue: number; // The minimum value.
-    maxValue: number; // The maximum value.
-    unit: "px" | "rem"; // The unit of measurement.
-    remSize: number; // The size of 1 rem in pixels.
+    minViewportWidth: number;
+    maxViewportWidth: number;
+    minValue: number;
+    maxValue: number;
+    remSize: number;
+    minViewportWidthUnit: "px" | "rem";
+    maxViewportWidthUnit: "px" | "rem";
+    minValueUnit: "px" | "rem";
+    maxValueUnit: "px" | "rem";
 };
 
 // Other state values.
 // type OtherStateValues = {
-    // Add other state values here.
+// Add other state values here.
 // };
 
 // The store, including state values and actions.
 // type Store = ClampGeneratorStateValues & OtherStateValues & {
 type Store = ClampGeneratorStateValues & {
-    setMinViewportWidth: (value: number) => void; // Function to set the minimum viewport width.
-    setMaxViewportWidth: (value: number) => void; // Function to set the maximum viewport width.
-    setMinValue: (value: number) => void; // Function to set the minimum value.
-    setMaxValue: (value: number) => void; // Function to set the maximum value.
-    setUnit: (value: "px" | "rem") => void; // Function to set the unit of measurement.
-    setRemSize: (value: number) => void; // Function to set the size of 1 rem in pixels.
-    // Other setters here.
+    setMinViewportWidth: (value: number) => void;
+    setMaxViewportWidth: (value: number) => void;
+    setMinValue: (value: number) => void;
+    setMaxValue: (value: number) => void;
+    // setRemSize: (value: number) => void;
+    setMinViewportWidthUnit: (value: "px" | "rem") => void;
+    setMaxViewportWidthUnit: (value: "px" | "rem") => void;
+    setMinValueUnit: (value: "px" | "rem") => void;
+    setMaxValueUnit: (value: "px" | "rem") => void;
 };
 
 // Default state values for the store.
@@ -35,8 +40,11 @@ const defaultState: ClampGeneratorStateValues = {
     maxViewportWidth: 1600,
     minValue: 16,
     maxValue: 24,
-    unit: "px",
-    remSize: 16,
+    remSize: 16, // CONSTANT. MAYBE ADD FUNCTIONALITY TO CHANGE THIS LATER.
+    minViewportWidthUnit: "px",
+    maxViewportWidthUnit: "px",
+    minValueUnit: "px",
+    maxValueUnit: "px",
 };
 
 // Storage middleware for persisting state in localStorage.
@@ -83,12 +91,17 @@ export const useStore = create<Store>(
             setMaxViewportWidth: (value) => set({ maxViewportWidth: value }),
             setMinValue: (value) => set({ minValue: value }),
             setMaxValue: (value) => set({ maxValue: value }),
-            setUnit: (value) => set({ unit: value }),
-            setRemSize: (value) => set({ remSize: value }),
+            // setRemSize: (value) => set({ remSize: value }),
+            setMinViewportWidthUnit: (value) =>
+                set({ minViewportWidthUnit: value }),
+            setMaxViewportWidthUnit: (value) =>
+                set({ maxViewportWidthUnit: value }),
+            setMinValueUnit: (value) => set({ minValueUnit: value }),
+            setMaxValueUnit: (value) => set({ maxValueUnit: value }),
         }),
         {
-            name: "ui-tools-storage", // unique name
-            storage: localStoragePersist, // specify localStorage as the storage option
+            name: "ui-tools-storage", // Unique name.
+            storage: localStoragePersist, // Specify localStorage as the storage option.
             migrate: (persistedState: unknown, _: number) => {
                 const state = persistedState as Partial<Store>;
                 if (state) {
@@ -97,11 +110,18 @@ export const useStore = create<Store>(
                         maxViewportWidth: Number(state.maxViewportWidth),
                         minValue: Number(state.minValue),
                         maxValue: Number(state.maxValue),
-                        unit: state.unit as "px" | "rem",
                         remSize: Number(state.remSize),
+                        minViewportWidthUnit: state.minViewportWidthUnit as
+                            | "px"
+                            | "rem",
+                        maxViewportWidthUnit: state.maxViewportWidthUnit as
+                            | "px"
+                            | "rem",
+                        minValueUnit: state.minValueUnit as "px" | "rem",
+                        maxValueUnit: state.maxValueUnit as "px" | "rem",
                     };
                 }
-                // return default state if persistedState is undefined
+                // Return default state if persistedState is undefined.
                 return defaultState;
             },
         },

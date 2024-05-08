@@ -1,4 +1,5 @@
 import roundToThreeDecimals from "./roundToThreeDecimals";
+import convertToPixels from "./convertToPixels";
 
 type GenerateClampResult = {
     result?: string;
@@ -6,67 +7,83 @@ type GenerateClampResult = {
 };
 
 /**
- * Generates a CSS clamp() function value for responsive design.
+ * Generates a CSS clamp() function based on the provided parameters.
  *
  * @param {number} minViewportWidth - The minimum viewport width.
+ * @param {"px"|"rem"} minViewportWidthUnit - The unit of the minimum viewport width (`px` or `rem`).
  * @param {number} maxViewportWidth - The maximum viewport width.
+ * @param {"px"|"rem"} maxViewportWidthUnit - The unit of the maximum viewport width (`px` or `rem`).
  * @param {number} minValue - The minimum value.
+ * @param {"px"|"rem"} minValueUnit - The unit of the minimum value (`px` or `rem`).
  * @param {number} maxValue - The maximum value.
- * @param {"px"|"rem"} unit - The unit of the min and max values.
- * @param {number} remSize - The size of 1rem in pixels.
- * @returns {string} The CSS clamp() function value.
+ * @param {"px"|"rem"} maxValueUnit - The unit of the maximum value (`px` or `rem`).
+ * @param {number} remSize - The size of 1 rem in pixels.
+ * @returns The generated `clamp` function as a string, or an object containing errors if there are any.
  */
 const generateClamp = (
     minViewportWidth: number,
+    minViewportWidthUnit: "px" | "rem",
     maxViewportWidth: number,
+    maxViewportWidthUnit: "px" | "rem",
     minValue: number,
+    minValueUnit: "px" | "rem",
     maxValue: number,
-    unit: "px" | "rem",
+    maxValueUnit: "px" | "rem",
     remSize: number,
 ): GenerateClampResult => {
     const errors = [];
 
+    const convertedMinViewportWidth = convertToPixels(
+        minViewportWidthUnit,
+        minViewportWidth,
+        remSize,
+    );
+    const convertedMaxViewportWidth = convertToPixels(
+        maxViewportWidthUnit,
+        maxViewportWidth,
+        remSize,
+    );
+    const convertedMinValue = convertToPixels(minValueUnit, minValue, remSize);
+    const convertedMaxValue = convertToPixels(maxValueUnit, maxValue, remSize);
+
     // Check for invalid input.
-    if (minViewportWidth >= maxViewportWidth) {
+    if (convertedMinViewportWidth >= convertedMaxViewportWidth) {
         errors.push({
             param: "minViewportWidth",
-            message: "Maximum viewport width must be greater than minimum viewport width.",
+            message:
+                "Maximum viewport width must be greater than minimum viewport width.",
         });
         errors.push({
             param: "maxViewportWidth",
-            message: "Maximum viewport width must be greater than minimum viewport width.",
+            message:
+                "Maximum viewport width must be greater than minimum viewport width.",
         });
     }
-    if (minValue < 0) {
+    if (convertedMinValue < 0) {
         errors.push({
             param: "minValue",
             message: "Value cannot be negative.",
         });
     }
-    if (maxValue < 0) {
+    if (convertedMaxValue < 0) {
         errors.push({
             param: "maxValue",
             message: "Value cannot be negative.",
         });
     }
-    if (minViewportWidth < 0) {
+    if (convertedMinViewportWidth < 0) {
         errors.push({
             param: "minViewportWidth",
             message: "Value cannot be negative.",
         });
     }
-    if (maxViewportWidth < 0) {
+    if (convertedMaxViewportWidth < 0) {
         errors.push({
             param: "maxViewportWidth",
             message: "Value cannot be negative.",
         });
     }
-    if (unit !== "px" && unit !== "rem") {
-        errors.push({
-            param: "unit",
-            message: "Unit must be either 'px' or 'rem'",
-        });
-    }
+    // Won't happen right now. Maybe in the future (if we allow changing rem size).
     if (remSize <= 0) {
         errors.push({
             param: "remSize",
@@ -78,22 +95,19 @@ const generateClamp = (
         return { errors };
     }
 
-    // Convert sizes to pixels if unit is 'rem'.
-    const minValuePx = unit === "rem" ? minValue * remSize : minValue;
-    const maxValuePx = unit === "rem" ? maxValue * remSize : maxValue;
-
     /**
      * Calculate the slope of the line representing the rate of change of the value (in pixels)
      * with respect to the viewport width.
      */
     const slope =
-        (maxValuePx - minValuePx) / (maxViewportWidth - minViewportWidth);
+        (convertedMaxValue - convertedMinValue) /
+        (convertedMaxViewportWidth - convertedMinViewportWidth);
 
     /**
      * Calculate the y-intercept, which represents the starting value (in pixels)
      * when the viewport width is at its minimum.
      */
-    const intercept = minValuePx - slope * minViewportWidth;
+    const intercept = convertedMinValue - slope * convertedMinViewportWidth;
 
     // Convert slope and intercept to correct units.
     const slopeVw = roundToThreeDecimals(slope * 100);
@@ -107,7 +121,7 @@ const generateClamp = (
             : `+ ${interceptRem}rem`;
 
     return {
-        result: `clamp(${roundToThreeDecimals(minValuePx / remSize)}rem, ${slopeStr} ${interceptStr}, ${roundToThreeDecimals(maxValuePx / remSize)}rem)`,
+        result: `clamp(${roundToThreeDecimals(convertedMinValue / remSize)}rem, ${slopeStr} ${interceptStr}, ${roundToThreeDecimals(convertedMaxValue / remSize)}rem)`,
     };
 };
 

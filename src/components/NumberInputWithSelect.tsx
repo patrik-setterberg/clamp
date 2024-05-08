@@ -1,5 +1,3 @@
-import React from "react";
-
 import clsx from "clsx/lite";
 
 type NumberInputWithSelectProps = {
@@ -41,7 +39,8 @@ const NumberInputWithSelect = ({
     const focusClasses =
         "focus:outline-dashed focus:outline-offset-2 hover:focus:outline-slate focus:outline-2";
 
-    const selectWidthClass = selectValue === "rem" ? "w-[3.75rem]" : "w-[3.125rem]";
+    const selectWidthClass =
+        selectValue === "rem" ? "w-[3.75rem]" : "w-[3.125rem]";
 
     return (
         <label className="relative flex flex-col text-xs">
