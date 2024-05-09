@@ -46,8 +46,8 @@ const NumberInputWithSelect = ({
         <label className="relative flex flex-col text-xs">
             <span
                 className={clsx(
-                    "bg-night absolute block w-fit -translate-y-1/2 translate-x-3 px-1 tracking-wider transition duration-100",
-                    error ? "text-red-700" : "text-white",
+                    "bg-night absolute block w-fit -translate-y-1/2 translate-x-3 px-1 tracking-wide transition duration-150 ease-out",
+                    error ? "text-error" : "text-white",
                 )}
             >
                 {label}
@@ -57,10 +57,8 @@ const NumberInputWithSelect = ({
                 onChange={handleInputChange}
                 value={inputValue}
                 className={clsx(
-                    "border-gray w-full rounded-md border border-solid bg-transparent px-4 py-2 text-base tracking-wide text-white transition duration-100",
-                    error
-                        ? "border-red-700 focus:outline-red-700"
-                        : "border-cream focus:outline-slate",
+                    "w-full monospace rounded-md border border-solid bg-transparent px-4 py-2 text-base tracking-wide text-white transition duration-150 ease-out",
+                    error ? "border-error" : "border-gray focus:outline-slate",
                     focusClasses,
                 )}
                 aria-label={label}
@@ -68,7 +66,7 @@ const NumberInputWithSelect = ({
             <select
                 name="unit"
                 className={clsx(
-                    "select bg-night absolute right-[5px] top-1/2 h-8 -translate-y-1/2 appearance-none rounded-[5px] px-2 pr-[1.625rem] text-[13px] font-semibold uppercase text-white focus:bg-dark focus:outline-none",
+                    "select bg-night hover:bg-onyx absolute right-[5px] top-1/2 h-8 -translate-y-1/2 cursor-pointer appearance-none rounded-[5px] px-2 pr-[1.625rem] text-[13px] font-semibold uppercase text-white transition duration-150 ease-out focus:bg-dark focus:outline-none",
                     selectWidthClass,
                 )}
                 value={selectValue}

@@ -30,6 +30,7 @@ body {
     /* animation: move 30s infinite ease-in-out; */
     /* background-color: #F9F3EA; */
     background-color: #2d2f31;
+    background-color: #202124;
 }
 
 .monospace {
@@ -40,8 +41,8 @@ body {
 }
 
 ::selection {
-    background-color: #6e8898;
-    color: #f3f3eb;
+    background-color: #8ab4f8;
+    color: #202124;
 }
 
 .select {

@@ -8,15 +8,15 @@ import { ReactNode } from "react";
  * @returns The rendered main element component.
  */
 const Main = (props: { children: ReactNode }): JSX.Element => {
-  const { children } = props;
+    const { children } = props;
 
-  return (
-    <main className="flex items-center justify-center text-black">
-      <div className="flex w-full max-w-screen-2xl flex-col p-default">
-        {children}
-      </div>
-    </main>
-  );
+    return (
+        <main className="flex h-full justify-center text-black">
+            <div className="flex w-full max-w-screen-2xl flex-col px-default pb-default pt-20">
+                {children}
+            </div>
+        </main>
+    );
 };
 
 export default Main;

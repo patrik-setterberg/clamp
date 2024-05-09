@@ -7,13 +7,19 @@ import Main from "./components/Main";
 import Box from "./components/Box";
 import ClampGenerator from "./components/ClampGenerator";
 
+// Assets
+import code from "./assets/images/code.svg";
+
 function App() {
     return (
         <>
             <Header>
-                <span className="text-sm font-bold text-cream">
-                    {"{"} ui-tools.dev {"}"}
-                </span>
+                <div className="flex items-center">
+                    <img src={code} alt="Code icon" className="h-8 w-8" />
+                    <h1 className="text-cream ml-2 text-xl font-bold">
+                        ui-tools.dev
+                    </h1>
+                </div>
             </Header>
             <Main>
                 {/* <Gear
@@ -24,11 +30,29 @@ function App() {
                     classNames="left-full z-0 top-0 h-[65vw] w-[65vw] -translate-x-2/3 -translate-y-1/3 opacity-50"
                     animationClass="animate-spin-reverse"
                 /> */}
-
-                <h1 className="text-black">ui tools</h1>
                 <Box>
                     <ClampGenerator />
                 </Box>
+                <div className="mx-auto mt-2 w-full max-w-[640px] pr-4">
+                    <p className="text-xs text-[#999] text-right">
+                        Learn more about{" "}
+                        <a
+                            href="https://developer.mozilla.org/en-US/docs/Web/CSS/clamp"
+                            className="font-semibold text-blue"
+                            target="_blank"
+                        >
+                            clamp()
+                        </a>{" "}
+                        and{" "}
+                        <a
+                            href="https://css-tricks.com/snippets/css/fluid-typography/"
+                            className="font-semibold text-blue"
+                            target="_blank"
+                        >
+                            fluid typography
+                        </a>
+                    </p>
+                </div>
             </Main>
         </>
     );

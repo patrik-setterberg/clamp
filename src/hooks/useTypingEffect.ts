@@ -13,15 +13,10 @@ function useTypingEffect(text: string, typingSpeed: number, variance: number) {
 
     useEffect(() => {
         let index = 0;
-
-        // Function to type the first character
-        const typeFirstCharacter = () => {
-            setOutputText(text.charAt(0));
-        };
+        let timeoutId: number; // Change this line
 
         // Function to type the next character
         const typeNextCharacter = () => {
-            index++;
             if (index < text.length) {
                 setOutputText((prev) => prev + text.charAt(index));
 
@@ -32,18 +27,22 @@ function useTypingEffect(text: string, typingSpeed: number, variance: number) {
                     variance;
                 speed = Math.max(speed, 1); // Ensure speed is at least 1 ms
 
+                index++; // Increment the index
+
                 // Schedule the typing of the next character
-                setTimeout(typeNextCharacter, speed);
+                timeoutId = setTimeout(typeNextCharacter, speed);
             }
         };
 
         // Start the typing effect
-        typeFirstCharacter();
-        const initialDelay = Math.max(
-            typingSpeed + Math.floor(Math.random() * variance * 2) - variance,
-            1,
-        );
-        setTimeout(typeNextCharacter, initialDelay);
+        typeNextCharacter(); 
+
+        // Clear the timeout when the component unmounts or the dependencies change
+        return () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
     }, [text, typingSpeed, variance]);
 
     return outputText;

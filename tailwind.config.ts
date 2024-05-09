@@ -23,11 +23,16 @@ export default {
         // onyx: "#474448",
         // night: "#151515",
 
+        blue: '#8ab4f8',
+        'light-blue': '#B4CFFA',
         gray: '#444746',
-        white: '#e3e3e3',
+        // white: '#e3e3e3',
+        white: '#e8eaed',
         onyx: '#333438',
         dark: '#2d2f31',
         night: '#28292a',
+        black: '#202124',
+        error: '#AD2E24'
       },
       translate: {},
       keyframes: {

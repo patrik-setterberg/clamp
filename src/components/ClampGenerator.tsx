@@ -2,13 +2,18 @@ import { useEffect, useState, Fragment } from "react";
 
 // Components
 import NumberInputWithSelect from "./NumberInputWithSelect";
-import Button from "./Button";
+import CopyButton from "./CopyButton";
 
 // Store
 import { useStore } from "../store/uiToolsStore";
 
 // Helpers
 import generateClamp from "../helpers/generateClamp";
+import selectText from "../helpers/selectText";
+
+// Assets
+import angleup from "../assets/images/angleup.svg";
+import error from "../assets/images/error.svg";
 
 // Hooks
 import useTypingEffect from "../hooks/useTypingEffect";
@@ -120,18 +125,36 @@ const ClampGenerator = (): JSX.Element => {
         );
     }, [errors]);
 
-    const TYPING_SPEED = 20;
-    const VARIANCE = 40;
-    const typedErrors = useTypingEffect(errorMessages, TYPING_SPEED, VARIANCE);
-    const typedClampValue = useTypingEffect(clampValue, TYPING_SPEED, VARIANCE);
+    const TYPING_SPEED = 75;
+    const VARIANCE = 50;
+    // const typedErrors = useTypingEffect(errorMessages, TYPING_SPEED, VARIANCE);
+    // const typedClampValue = useTypingEffect(clampValue, TYPING_SPEED, VARIANCE);
+    let title = useTypingEffect("Generate clamp()", TYPING_SPEED, VARIANCE);
+
+    const [copySuccess, setCopySuccess] = useState(false);
 
     /**
-     * Handle the form submission event.
+     * Handle the form submission event:
+     * Copies the clamp value to the clipboard.
      * @param event - The form submission event.
      */
     const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        navigator.clipboard.writeText(clampValue).then(
+            function () {
+                setCopySuccess(true);
+                setTimeout(() => {
+                    setCopySuccess(false);
+                }, 2000);
+            },
+            function (err) {
+                console.error(err);
+            },
+        );
+    };
+
+    useEffect(() => {
         setErrors({});
 
         const { result, errors: newErrors } = generateClamp(
@@ -155,15 +178,24 @@ const ClampGenerator = (): JSX.Element => {
         } else {
             typeof result === "string" && setClampValue(result);
         }
-    };
+    }, [minViewportWidth, maxViewportWidth, minValue, maxValue]);
 
     return (
-        <section className="">
-            <div className="">
-                <h2 className="mb-10 text-lg font-bold uppercase">
-                    Clamp Generator
-                </h2>
+        <>
+            <div className="mb-4 flex items-center gap-4">
+                <div className="bg-onyx rounded-md p-2">
+                    <img src={angleup} alt="" />
+                </div>
+                <div>
+                    <h2 className="font-mono text-lg font-semibold text-white">
+                        {title}
+                    </h2>
+                </div>
             </div>
+            <p className="mb-9 text-sm text-white">
+                Create linearly scaling fluid size values based on viewport
+                width.
+            </p>
 
             <form
                 onSubmit={submitHandler}
@@ -201,23 +233,40 @@ const ClampGenerator = (): JSX.Element => {
                     selectOnChange={setMaxValueUnit}
                     error={errors.maxValue !== undefined}
                 />
-                <div className="col-span-2 mt-4 flex justify-start">
-                    <Button type="submit" label="Generate Clamp" />
-                </div>
+
+                {errorMessages && (
+                    <div className="text-error col-span-2 mt-6 flex gap-2.5 rounded-md bg-dark px-3 py-2.5 text-sm leading-[1.5]">
+                        <img
+                            src={error}
+                            className="h-fit"
+                            alt="error icon"
+                        />
+                        {errorMessages.split("\n").map((line, index) => (
+                            <Fragment key={index}>
+                                {line}
+                                <br />
+                            </Fragment>
+                        ))}
+                    </div>
+                )}
+                {!errorMessages && clampValue && (
+                    <div className="col-span-2 mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
+                        <code
+                            tabIndex={0}
+                            className="bg-onyx block max-w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md px-4 py-3 text-sm text-white max-sm:rounded-md sm:py-[9px] sm:text-base"
+                            onClick={selectText}
+                        >
+                            {clampValue}
+                        </code>
+
+                        <CopyButton
+                            classNames="sm:rounded-l-none"
+                            copySuccess={copySuccess}
+                        />
+                    </div>
+                )}
             </form>
-            {typedErrors ? (
-                <div className="monospace block text-red-800">
-                    {typedErrors.split("\n").map((line, index) => (
-                        <Fragment key={index}>
-                            {line}
-                            <br />
-                        </Fragment>
-                    ))}
-                </div>
-            ) : (
-                <p className="monospace">{typedClampValue}</p>
-            )}
-        </section>
+        </>
     );
 };
 

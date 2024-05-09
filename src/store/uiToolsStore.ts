@@ -36,7 +36,7 @@ type Store = ClampGeneratorStateValues & {
 // Default state values for the store.
 // const defaultState: ClampGeneratorStateValues & OtherStateValues = {
 const defaultState: ClampGeneratorStateValues = {
-    minViewportWidth: 400,
+    minViewportWidth: 600,
     maxViewportWidth: 1600,
     minValue: 16,
     maxValue: 24,
