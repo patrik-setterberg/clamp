@@ -1,9 +1,11 @@
+import { MouseEvent } from "react";
+
 /**
  * Selects the text content of the target element.
  *
- * @param event - The mouse event that triggered the text selection.
+ * @param {MouseEvent} event - The mouse event that triggered the text selection.
  */
-function selectText(event: React.MouseEvent<HTMLElement>) {
+function selectText(event: MouseEvent<HTMLElement>) {
     const range = document.createRange();
     range.selectNodeContents(event.currentTarget);
     const selection = window.getSelection();

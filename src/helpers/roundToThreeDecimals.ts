@@ -1,5 +1,6 @@
 /**
  * Rounds a number to three decimal places.
+ * 
  * @param {number} num - The number to be rounded.
  * @returns {number} The rounded number.
  */

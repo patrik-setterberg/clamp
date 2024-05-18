@@ -1,11 +1,12 @@
 import { ReactNode } from "react";
 
 /**
- * Main element component.
+ * The <main> element component of the application.
  *
- * @param props - The component props.
- * @param props.children - The child elements of the component.
- * @returns The rendered main element component.
+ * @component
+ * @param {Object} props - The component props.
+ * @param {ReactNode} props.children - The child elements to render inside the main component.
+ * @returns {JSX.Element} The rendered main component.
  */
 const Main = (props: { children: ReactNode }): JSX.Element => {
     const { children } = props;

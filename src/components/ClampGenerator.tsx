@@ -1,4 +1,5 @@
 import { useEffect, useState, Fragment } from "react";
+import clsx from "clsx/lite";
 
 // Components
 import NumberInputWithSelect from "./NumberInputWithSelect";
@@ -235,12 +236,8 @@ const ClampGenerator = (): JSX.Element => {
                 />
 
                 {errorMessages && (
-                    <div className="text-error col-span-2 mt-6 flex gap-2.5 rounded-md bg-dark px-3 py-2.5 text-sm leading-[1.5]">
-                        <img
-                            src={error}
-                            className="h-fit"
-                            alt="error icon"
-                        />
+                    <div className="text-white col-span-2 mt-6 flex gap-2.5 rounded-md bg-error-dark leading-[1.7] px-3 py-2.5 text-sm">
+                        <img src={error} className="h-fit" alt="Error icon" />
                         {errorMessages.split("\n").map((line, index) => (
                             <Fragment key={index}>
                                 {line}
@@ -252,15 +249,16 @@ const ClampGenerator = (): JSX.Element => {
                 {!errorMessages && clampValue && (
                     <div className="col-span-2 mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
                         <code
-                            tabIndex={0}
-                            className="bg-onyx block max-w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md px-4 py-3 text-sm text-white max-sm:rounded-md sm:py-[9px] sm:text-base"
+                            className={clsx(
+                                "bg-onyx focus-visible: block max-w-full max-sm:w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md px-4 py-3 text-sm text-white max-sm:rounded-md sm:py-[9px] sm:text-base",
+                                "focus-visible:outline-dark-blue focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 hover:focus-visible:outline-none sm:focus-visible:mr-1.5",
+                            )}
                             onClick={selectText}
                         >
                             {clampValue}
                         </code>
 
                         <CopyButton
-                            classNames="sm:rounded-l-none"
                             copySuccess={copySuccess}
                         />
                     </div>

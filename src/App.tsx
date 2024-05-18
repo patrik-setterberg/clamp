@@ -1,14 +1,15 @@
-import "./App.css";
-
 // Components
 import Header from "./components/Header";
 import Main from "./components/Main";
+import Link from "./components/Link";
 // import Gear from "./components/Gear";
 import Box from "./components/Box";
 import ClampGenerator from "./components/ClampGenerator";
 
 // Assets
 import code from "./assets/images/code.svg";
+
+import "./App.css";
 
 function App() {
     return (
@@ -23,34 +24,33 @@ function App() {
             </Header>
             <Main>
                 {/* <Gear
-                    classNames="left-0 z-0 top-full h-[40vw] w-[40vw] -translate-x-1/2 -translate-y-1/2 opacity-50"
+                    classNames="left-0 z-[-1] top-full h-[40vw] w-[40vw] -translate-x-1/2 -translate-y-1/2 opacity-25"
                     animationClass="animate-spin"
                 />
                 <Gear
-                    classNames="left-full z-0 top-0 h-[65vw] w-[65vw] -translate-x-2/3 -translate-y-1/3 opacity-50"
+                    classNames="left-full z-[-1] top-0 h-[65vw] w-[65vw] -translate-x-2/3 -translate-y-1/3 opacity-25"
                     animationClass="animate-spin-reverse"
                 /> */}
                 <Box>
                     <ClampGenerator />
                 </Box>
                 <div className="mx-auto mt-2 w-full max-w-[640px] pr-4">
-                    <p className="text-xs text-[#999] text-right">
+                    <p className="text-left text-xs text-[#999] sm:text-right">
                         Learn more about{" "}
-                        <a
+                        <Link
+                            newTab={true}
                             href="https://developer.mozilla.org/en-US/docs/Web/CSS/clamp"
-                            className="font-semibold text-blue"
-                            target="_blank"
                         >
                             clamp()
-                        </a>{" "}
+                        </Link>{" "}
                         and{" "}
-                        <a
+                        <Link
+                            newTab={true}
                             href="https://css-tricks.com/snippets/css/fluid-typography/"
-                            className="font-semibold text-blue"
-                            target="_blank"
                         >
                             fluid typography
-                        </a>
+                        </Link>
+                        .
                     </p>
                 </div>
             </Main>

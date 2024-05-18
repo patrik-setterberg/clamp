@@ -5,63 +5,64 @@ import done from "../assets/images/done.svg";
 
 type CopyButtonProps = {
     classNames?: string;
-    onClick?: () => void;
     copySuccess: boolean;
 };
 
 /**
- * Copy Button component.
+ * CopyButton component. Used as submit handler for Clamp Generator form.
+ * Submission will copy the generated CSS clamp value to the clipboard.
  *
- * @param {Object} props - The component props.
- * @param {string} props.classNames - The CSS classes for the button.
- * @param {string} props.label - The label text for the button.
- * @param {Function} props.func - The function to be called when the button is clicked.
- * @returns {JSX.Element} The rendered button component.
+ * Some styling in App.css.
+ *
+ * @component
+ * @param {CopyButtonProps} props - The props for the CopyButton component.
+ * @param {string} props.classNames - Additional CSS classes for the button.
+ * @param {boolean} props.copySuccess - Indicates whether the copy operation was successful.
+ * @returns {JSX.Element} The rendered CopyButton component.
  */
 const CopyButton = (props: CopyButtonProps): JSX.Element => {
-    const { classNames, onClick, copySuccess } = props;
+    const { classNames, copySuccess } = props;
 
-    const defaultClasses =
-        "py-[11px] px-4 rounded-md bg-blue text-black text-sm transition-colors duration-150 ease-out font-semibold w-fit flex items-center gap-[5px]";
-    const hoverClasses = "hover:bg-light-blue";
-    const focusClasses =
-        "focus:outline-dashed focus:outline-slate focus:outline-offset-2 hover:focus:outline-onyx focus:outline-2";
-    const activeClasses = "active:transform active:scale-95";
-
-    const iconClasses = "absolute transition duration-150 ease-out";
+    const ACCESSIBLE_TEXT = "Copy to clipboard";
 
     return (
         <button
             type="submit"
             className={clsx(
-                defaultClasses,
-                hoverClasses,
-                focusClasses,
-                activeClasses,
+                "copy-button",
+                "flex w-fit justify-center rounded-md bg-blue px-[22px] py-[11px] text-sm font-bold text-black outline-2 outline-offset-2 outline-transparent max-[500px]:w-full sm:rounded-l-none sm:px-4",
+                "hover:bg-light-blue",
+                "focus-visible:bg-light-blue focus-visible:outline-blue",
+                "transition-colors duration-100 ease-out",
                 classNames,
             )}
-            onClick={onClick}
+            aria-label={ACCESSIBLE_TEXT}
         >
-            <div className="relative h-5 w-5">
-                <img
-                    src={copy}
-                    className={clsx(
-                        iconClasses,
-                        copySuccess ? "opacity-0" : "opacity-100",
-                    )}
-                    alt="copy icon"
-                />
-                <img
-                    src={done}
-                    className={clsx(
-                        iconClasses,
-                        copySuccess ? "opacity-100" : "opacity-0",
-                    )}
-                    alt="checkmark icon"
-                />
+            <div className="flex origin-bottom items-center gap-[5px]">
+                <div className="relative h-5 w-5">
+                    <img
+                        src={copy}
+                        className={clsx(
+                            "absolute",
+                            "transition duration-150 ease-out",
+                            copySuccess ? "opacity-0" : "opacity-100",
+                        )}
+                        alt="Copy icon"
+                    />
+                    <img
+                        src={done}
+                        className={clsx(
+                            "absolute",
+                            "transition duration-150 ease-out",
+                            copySuccess ? "opacity-100" : "opacity-0",
+                        )}
+                        alt="Checkmark icon"
+                    />
+                </div>
+                <span>Copy</span>
             </div>
-            Copy
-            <span className="sr-only">Copy to clipboard</span>
+
+            <span className="sr-only">{ACCESSIBLE_TEXT}</span>
         </button>
     );
 };
