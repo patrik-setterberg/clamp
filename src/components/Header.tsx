@@ -11,10 +11,8 @@ const Header = (props: { children: ReactNode }): JSX.Element => {
     const { children } = props;
 
     return (
-        <header className="bg-night relative z-10 flex items-center justify-center">
-            <div className="flex w-full max-w-screen-2xl justify-between p-default">
-                {children}
-            </div>
+        <header className="relative z-10 flex items-center justify-center bg-night">
+            <div className="flex w-full justify-between p-4">{children}</div>
         </header>
     );
 };

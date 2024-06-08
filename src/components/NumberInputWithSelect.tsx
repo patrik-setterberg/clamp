@@ -55,8 +55,8 @@ const NumberInputWithSelect = ({
         <label className="relative flex flex-col text-xs">
             <span
                 className={clsx(
-                    "bg-night leading-1 absolute block w-fit -translate-y-1/2 translate-x-3 cursor-pointer rounded-sm px-1 tracking-wide",
-                    "transition duration-150 ease-out",
+                    "leading-1 absolute block w-fit -translate-y-1/2 translate-x-3 cursor-pointer rounded-sm bg-night px-1 tracking-wide",
+                    "transition duration-100 ease-out",
                     error ? "text-error" : "text-white",
                 )}
             >
@@ -68,7 +68,7 @@ const NumberInputWithSelect = ({
                 value={inputValue}
                 className={clsx(
                     "monospace w-full rounded-md border border-solid bg-transparent px-4 py-2 text-base tracking-wide text-white",
-                    "transition duration-150 ease-out",
+                    "transition duration-100 ease-out",
                     "focus-visible:outline-none",
                     error
                         ? "border-error selection:bg-error selection:text-white"
@@ -80,7 +80,7 @@ const NumberInputWithSelect = ({
                 name="unit"
                 className={clsx(
                     "select",
-                    "bg-night absolute right-[5px] top-1/2 h-8 -translate-y-1/2 cursor-pointer appearance-none rounded-[5px] px-2 pr-[1.625rem] text-[13px] font-semibold uppercase text-white outline-2 outline-offset-2 outline-transparent",
+                    "absolute right-[5px] top-1/2 h-8 -translate-y-1/2 cursor-pointer appearance-none rounded-[5px] bg-night px-2 pr-[1.625rem] text-[13px] font-semibold uppercase text-white outline-2 outline-offset-2 outline-transparent",
                     "hover:bg-onyx",
                     "focus-visible:bg-onyx focus-visible:outline-light-blue",
                     "transition-colors duration-100 ease-out ",

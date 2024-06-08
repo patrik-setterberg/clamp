@@ -23,20 +23,20 @@ type CopyButtonProps = {
 const CopyButton = (props: CopyButtonProps): JSX.Element => {
     const { classNames, copySuccess } = props;
 
-    const ACCESSIBLE_TEXT = "Copy to clipboard";
+
 
     return (
         <button
             type="submit"
             className={clsx(
                 "copy-button",
-                "flex w-fit justify-center rounded-md bg-blue px-[22px] py-[11px] text-sm font-bold text-black outline-2 outline-offset-2 outline-transparent max-[500px]:w-full sm:rounded-l-none sm:px-4",
+                "flex w-fit justify-center rounded-md bg-blue px-[22px] py-3 text-sm font-bold text-black outline-2 outline-offset-2 outline-transparent max-[500px]:w-full sm:rounded-l-none sm:px-4",
                 "hover:bg-light-blue",
                 "focus-visible:bg-light-blue focus-visible:outline-blue",
                 "transition-colors duration-100 ease-out",
                 classNames,
             )}
-            aria-label={ACCESSIBLE_TEXT}
+            aria-label="Copy to clipboard"
         >
             <div className="flex origin-bottom items-center gap-[5px]">
                 <div className="relative h-5 w-5">
@@ -48,6 +48,7 @@ const CopyButton = (props: CopyButtonProps): JSX.Element => {
                             copySuccess ? "opacity-0" : "opacity-100",
                         )}
                         alt="Copy icon"
+                        aria-hidden="true"
                     />
                     <img
                         src={done}
@@ -57,12 +58,15 @@ const CopyButton = (props: CopyButtonProps): JSX.Element => {
                             copySuccess ? "opacity-100" : "opacity-0",
                         )}
                         alt="Checkmark icon"
+                        aria-hidden="true"
                     />
                 </div>
                 <span>Copy</span>
             </div>
 
-            <span className="sr-only">{ACCESSIBLE_TEXT}</span>
+            <div aria-live="polite" className="sr-only">
+                {copySuccess ? "Copied to clipboard" : ""}
+            </div>
         </button>
     );
 };

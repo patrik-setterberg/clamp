@@ -1,14 +1,14 @@
-// Components
+// Components.
 import Header from "./components/Header";
 import Main from "./components/Main";
 import Link from "./components/Link";
-// import Gear from "./components/Gear";
 import Box from "./components/Box";
 import ClampGenerator from "./components/ClampGenerator";
 
-// Assets
+// Assets.
 import code from "./assets/images/code.svg";
 
+// Styles.
 import "./App.css";
 
 function App() {
@@ -18,19 +18,11 @@ function App() {
                 <div className="flex items-center">
                     <img src={code} alt="Code icon" className="h-8 w-8" />
                     <h1 className="text-cream ml-2 text-xl font-bold">
-                        ui-tools.dev
+                        clamp.style
                     </h1>
                 </div>
             </Header>
             <Main>
-                {/* <Gear
-                    classNames="left-0 z-[-1] top-full h-[40vw] w-[40vw] -translate-x-1/2 -translate-y-1/2 opacity-25"
-                    animationClass="animate-spin"
-                />
-                <Gear
-                    classNames="left-full z-[-1] top-0 h-[65vw] w-[65vw] -translate-x-2/3 -translate-y-1/3 opacity-25"
-                    animationClass="animate-spin-reverse"
-                /> */}
                 <Box>
                     <ClampGenerator />
                 </Box>

@@ -27,8 +27,8 @@ const Link = ({ href, children, newTab }: LinkProps): JSX.Element => {
             href={href}
             className={clsx(
                 "rounded-sm font-semibold text-blue underline decoration-transparent decoration-2 underline-offset-[3px] outline outline-2 outline-offset-2 outline-transparent",
-                "hover:text-light-blue hover:decoration-current hover:decoration-2",
-                "focus-visible:text-light-blue focus-visible:outline-current",
+                "hover:text-light-blue hover:!decoration-current hover:decoration-2",
+                "focus-visible:text-light-blue focus-visible:decoration-transparent focus-visible:outline-current",
                 "transition-colors duration-100 ease-out",
             )}
             {...linkProps}

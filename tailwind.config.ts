@@ -11,18 +11,7 @@ export default {
 
     theme: {
         extend: {
-            spacing: {
-                default: "clamp(1rem, 0.727vw + 0.773rem, 1.5rem)",
-            },
             colors: {
-                // https://coolors.co/151515-474448-6e8898-e9e7dd-f3f3eb-fcfff8
-                // white: '#FCFFF8',
-                // light: "#F3F3EB",
-                // cream: '#E9E7DD',
-                // slate: "#6E8898",
-                // onyx: "#474448",
-                // night: "#151515",
-
                 blue: "#8ab4f8",
                 "light-blue": "#B4CFFA",
                 "dark-blue": "#58739E",
@@ -40,18 +29,6 @@ export default {
                 colors: "background-color, border-color, color, fill, stroke, outline-color, text-decoration-color",
             },
             translate: {},
-            keyframes: {
-                // Probably remove these.
-                spin: {
-                    "0%": { transform: "rotate(0deg)" },
-                    "100%": { transform: "rotate(360deg)" },
-                },
-            },
-            // Probably remove these.
-            animation: {
-                spin: "spin 240s linear infinite",
-                "spin-reverse": "spin 240s linear infinite reverse",
-            },
         },
     },
     variants: {

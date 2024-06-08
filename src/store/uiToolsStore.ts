@@ -14,19 +14,12 @@ type ClampGeneratorStateValues = {
     maxValueUnit: "px" | "rem";
 };
 
-// Other state values.
-// type OtherStateValues = {
-// Add other state values here.
-// };
-
 // The store, including state values and actions.
-// type Store = ClampGeneratorStateValues & OtherStateValues & {
 type Store = ClampGeneratorStateValues & {
     setMinViewportWidth: (value: number) => void;
     setMaxViewportWidth: (value: number) => void;
     setMinValue: (value: number) => void;
     setMaxValue: (value: number) => void;
-    // setRemSize: (value: number) => void;
     setMinViewportWidthUnit: (value: "px" | "rem") => void;
     setMaxViewportWidthUnit: (value: "px" | "rem") => void;
     setMinValueUnit: (value: "px" | "rem") => void;
@@ -34,7 +27,6 @@ type Store = ClampGeneratorStateValues & {
 };
 
 // Default state values for the store.
-// const defaultState: ClampGeneratorStateValues & OtherStateValues = {
 const defaultState: ClampGeneratorStateValues = {
     minViewportWidth: 600,
     maxViewportWidth: 1600,
@@ -48,19 +40,20 @@ const defaultState: ClampGeneratorStateValues = {
 };
 
 // Storage middleware for persisting state in localStorage.
-// const localStoragePersist: PersistStorage<ClampGeneratorStateValues & OtherStateValues> = {
 const localStoragePersist: PersistStorage<ClampGeneratorStateValues> = {
     getItem: (name) => {
-        // Get the item from localStorage
+        // Get the item from localStorage.
         const item = localStorage.getItem(name);
         if (item) {
-            // Parse the item and extract the state and timestamp
+            // Parse the item and extract the state and timestamp.
             const { state, timestamp } = JSON.parse(item);
 
             const currentTime = Date.now();
             const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
-            // If the current time is more than 24 hours later than the stored timestamp,
-            // return null to reset the state to its default values
+            /**
+             * If the current time is more than 24 hours later than the stored timestamp,
+             * return null to reset the state to its default values.
+             */
             if (currentTime - timestamp > oneDayInMilliseconds) {
                 return Promise.resolve(null);
             } else {
@@ -91,7 +84,6 @@ export const useStore = create<Store>(
             setMaxViewportWidth: (value) => set({ maxViewportWidth: value }),
             setMinValue: (value) => set({ minValue: value }),
             setMaxValue: (value) => set({ maxValue: value }),
-            // setRemSize: (value) => set({ remSize: value }),
             setMinViewportWidthUnit: (value) =>
                 set({ minViewportWidthUnit: value }),
             setMaxViewportWidthUnit: (value) =>
@@ -100,7 +92,7 @@ export const useStore = create<Store>(
             setMaxValueUnit: (value) => set({ maxValueUnit: value }),
         }),
         {
-            name: "ui-tools-storage", // Unique name.
+            name: "clamp-storage", // Unique name.
             storage: localStoragePersist, // Specify localStorage as the storage option.
             migrate: (persistedState: unknown, _: number) => {
                 const state = persistedState as Partial<Store>;

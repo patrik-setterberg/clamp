@@ -1,4 +1,4 @@
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx/lite";
 
 // Components
@@ -184,7 +184,7 @@ const ClampGenerator = (): JSX.Element => {
     return (
         <>
             <div className="mb-4 flex items-center gap-4">
-                <div className="bg-onyx rounded-md p-2">
+                <div className="rounded-md bg-onyx p-2">
                     <img src={angleup} alt="" />
                 </div>
                 <div>
@@ -235,32 +235,32 @@ const ClampGenerator = (): JSX.Element => {
                     error={errors.maxValue !== undefined}
                 />
 
-                {errorMessages && (
-                    <div className="text-white col-span-2 mt-6 flex gap-2.5 rounded-md bg-error-dark leading-[1.7] px-3 py-2.5 text-sm">
+                {!!errorMessages && (
+                    <div className="test col-span-2 mt-6 flex gap-2.5 rounded-md bg-error-dark px-3 py-2.5 text-sm leading-[1.7] text-white">
                         <img src={error} className="h-fit" alt="Error icon" />
-                        {errorMessages.split("\n").map((line, index) => (
-                            <Fragment key={index}>
-                                {line}
-                                <br />
-                            </Fragment>
-                        ))}
+                        <div className="grid">
+                            {errorMessages.split("\n").map((line, index) => (
+                                <span key={index}>
+                                    {line}
+                                    <br />
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 )}
-                {!errorMessages && clampValue && (
+                {!errorMessages && !!clampValue && (
                     <div className="col-span-2 mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
                         <code
                             className={clsx(
-                                "bg-onyx focus-visible: block max-w-full max-sm:w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md px-4 py-3 text-sm text-white max-sm:rounded-md sm:py-[9px] sm:text-base",
-                                "focus-visible:outline-dark-blue focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 hover:focus-visible:outline-none sm:focus-visible:mr-1.5",
+                                "block max-w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md bg-onyx px-4 py-3 text-sm text-white max-sm:w-full max-sm:rounded-md sm:py-2.5 sm:text-base",
+                                "focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-blue hover:focus-visible:outline-none sm:focus-visible:mr-1.5",
                             )}
                             onClick={selectText}
                         >
                             {clampValue}
                         </code>
 
-                        <CopyButton
-                            copySuccess={copySuccess}
-                        />
+                        <CopyButton copySuccess={copySuccess} />
                     </div>
                 )}
             </form>
