@@ -12,6 +12,8 @@ type ClampGeneratorStateValues = {
     maxViewportWidthUnit: "px" | "rem";
     minValueUnit: "px" | "rem";
     maxValueUnit: "px" | "rem";
+    clampValue: string;
+    hasErrors: boolean;
 };
 
 // The store, including state values and actions.
@@ -24,6 +26,8 @@ type Store = ClampGeneratorStateValues & {
     setMaxViewportWidthUnit: (value: "px" | "rem") => void;
     setMinValueUnit: (value: "px" | "rem") => void;
     setMaxValueUnit: (value: "px" | "rem") => void;
+    setClampValue: (value: string) => void;
+    setHasErrors: (value: boolean) => void;
 };
 
 // Default state values for the store.
@@ -37,6 +41,8 @@ const defaultState: ClampGeneratorStateValues = {
     maxViewportWidthUnit: "px",
     minValueUnit: "px",
     maxValueUnit: "px",
+    clampValue: "16px",
+    hasErrors: false,
 };
 
 // Storage middleware for persisting state in localStorage.
@@ -90,6 +96,8 @@ export const useStore = create<Store>(
                 set({ maxViewportWidthUnit: value }),
             setMinValueUnit: (value) => set({ minValueUnit: value }),
             setMaxValueUnit: (value) => set({ maxValueUnit: value }),
+            setClampValue: (value) => set({ clampValue: value }),
+            setHasErrors: (value) => set({ hasErrors: value }),
         }),
         {
             name: "clamp-storage", // Unique name.
@@ -111,6 +119,8 @@ export const useStore = create<Store>(
                             | "rem",
                         minValueUnit: state.minValueUnit as "px" | "rem",
                         maxValueUnit: state.maxValueUnit as "px" | "rem",
+                        clampValue: state.clampValue as string, 
+                        hasErrors: state.hasErrors as boolean,
                     };
                 }
                 // Return default state if persistedState is undefined.

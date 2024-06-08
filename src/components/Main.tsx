@@ -12,10 +12,8 @@ const Main = (props: { children: ReactNode }): JSX.Element => {
     const { children } = props;
 
     return (
-        <main className="flex h-full justify-center text-black">
-            <div className="flex w-full max-w-screen-2xl flex-col px-default pb-default pt-20">
-                {children}
-            </div>
+        <main className="flex h-full flex-grow flex-col px-4 pb-10 pt-24 text-black">
+            {children}
         </main>
     );
 };

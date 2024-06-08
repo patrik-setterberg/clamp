@@ -4,29 +4,35 @@ import Main from "./components/Main";
 import Link from "./components/Link";
 import Box from "./components/Box";
 import ClampGenerator from "./components/ClampGenerator";
+import PreviewText from "./components/PreviewText";
+import Footer from "./components/Footer";
 
 // Assets.
 import code from "./assets/images/code.svg";
+
+// Store.
+import { useStore } from "./store/uiToolsStore";
 
 // Styles.
 import "./App.css";
 
 function App() {
+
+    const hasErrors = useStore((state) => state.hasErrors);
+
     return (
         <>
             <Header>
-                <div className="flex items-center">
-                    <img src={code} alt="Code icon" className="h-8 w-8" />
-                    <h1 className="text-cream ml-2 text-xl font-bold">
-                        clamp.style
-                    </h1>
-                </div>
+                <img src={code} alt="Code icon" className="h-8 w-8" />
+                <h1 className="text-cream ml-2 text-xl font-bold">
+                    clamp.style
+                </h1>
             </Header>
             <Main>
                 <Box>
                     <ClampGenerator />
                 </Box>
-                <div className="mx-auto mt-2 w-full max-w-[640px] pr-4">
+                <div className="max-w-box mx-auto mt-2 w-full px-4">
                     <p className="text-left text-xs text-[#999] sm:text-right">
                         Learn more about{" "}
                         <Link
@@ -45,7 +51,9 @@ function App() {
                         .
                     </p>
                 </div>
+                {!hasErrors && <PreviewText />}
             </Main>
+            <Footer />
         </>
     );
 }

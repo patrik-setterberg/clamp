@@ -101,7 +101,15 @@ const ClampGenerator = (): JSX.Element => {
     /**
      * The generated clamp value.
      */
-    const [clampValue, setClampValue] = useState("");
+    const { clampValue, setClampValue } = useStore((state) => ({
+        clampValue: state.clampValue,
+        setClampValue: state.setClampValue,
+    }));
+
+    const { setHasErrors } = useStore((state) => ({
+        hasErrors: state.hasErrors,
+        setHasErrors: state.setHasErrors,
+    }));
 
     /**
      * Error handling.
@@ -126,11 +134,17 @@ const ClampGenerator = (): JSX.Element => {
         );
     }, [errors]);
 
-    const TYPING_SPEED = 75;
-    const VARIANCE = 50;
-    // const typedErrors = useTypingEffect(errorMessages, TYPING_SPEED, VARIANCE);
-    // const typedClampValue = useTypingEffect(clampValue, TYPING_SPEED, VARIANCE);
-    let title = useTypingEffect("Generate clamp()", TYPING_SPEED, VARIANCE);
+    useEffect(() => {
+        setHasErrors(!!errorMessages);
+    }, [errorMessages]);
+
+    const TYPING_SPEED: number = 50;
+    const VARIANCE: number = 20;
+    let title: string = useTypingEffect(
+        "Generate clamp()",
+        TYPING_SPEED,
+        VARIANCE,
+    );
 
     const [copySuccess, setCopySuccess] = useState(false);
 
@@ -248,6 +262,7 @@ const ClampGenerator = (): JSX.Element => {
                         </div>
                     </div>
                 )}
+                {/* CAUTION MESSAGE IF NEGATIVE SLOPE! */}
                 {!errorMessages && !!clampValue && (
                     <div className="col-span-2 mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
                         <code

@@ -11,7 +11,7 @@ import { ReactNode } from "react";
 const Box = (props: { children: ReactNode }): JSX.Element => {
     const { children } = props;
     return (
-        <article className="mx-auto w-full max-w-[640px] rounded-lg bg-night px-4 py-4">
+        <article className="mx-auto w-full max-w-box rounded-lg bg-night px-4 py-4">
             {children}
         </article>
     );
