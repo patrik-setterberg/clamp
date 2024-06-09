@@ -15,6 +15,8 @@ function useTypingEffect(text: string, typingSpeed: number, variance: number) {
         let index = 0;
         let timeoutId: number;
 
+        setOutputText(text.charAt(0));
+
         // Function to type the next character.
         const typeNextCharacter = () => {
             if (index < text.length) {
