@@ -25,6 +25,16 @@ body {
     color: #202124;
 }
 
+.error::selection {
+    background-color: #A63D40;
+    color: #e8eaed;
+}
+
+.caution::selection {
+    background-color: #EAC435;
+    color: #202124;
+}
+
 *:focus-visible:hover {
     outline: none !important;
 }

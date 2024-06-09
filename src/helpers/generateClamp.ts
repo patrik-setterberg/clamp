@@ -4,6 +4,7 @@ import convertToPixels from "./convertToPixels";
 type GenerateClampResult = {
     result?: string;
     errors?: { param: string; message: string }[];
+    cautions?: { param: string; message: string }[];
 };
 
 /**
@@ -95,6 +96,32 @@ const generateClamp = (
         return { errors };
     }
 
+    const cautions = [];
+
+    if (convertedMaxValue < convertedMinValue) {
+        cautions.push({
+            param: "minValue",
+            message:
+                "Max value is larger than min value. Please note: In CSS clamp(), if the max value is smaller than the min value, the size won't decrease as viewport width increases.",
+        });
+        cautions.push({
+            param: "maxValue",
+            message:
+                "Max value is larger than min value. Please note: In CSS clamp(), if the max value is smaller than the min value, the size won't decrease as viewport width increases.",
+        });
+    }
+
+    if (convertedMaxValue === convertedMinValue) {
+        cautions.push({
+            param: "minValue",
+            message: "Max value is equal to min value. No scaling will occur.",
+        });
+        cautions.push({
+            param: "maxValue",
+            message: "Max value is equal to min value. No scaling will occur.",
+        });
+    }
+
     /**
      * Calculate the slope of the line representing the rate of change of the value (in pixels)
      * with respect to the viewport width.
@@ -122,6 +149,7 @@ const generateClamp = (
 
     return {
         result: `clamp(${roundToFourDecimals(convertedMinValue / remSize)}rem, ${slopeStr} ${interceptStr}, ${roundToFourDecimals(convertedMaxValue / remSize)}rem)`,
+        cautions,
     };
 };
 

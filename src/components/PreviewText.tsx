@@ -147,7 +147,9 @@ const PreviewText = (): JSX.Element => {
         }, 1000);
     }, [maxViewportWidth]);
 
-    const [text, setText] = useState("I, too, am moist (edit me)");
+    const [inputValue, setInputValue] = useState<string>(
+        "I, too, am moist (edit me)",
+    );
 
     return (
         <div
@@ -193,8 +195,8 @@ const PreviewText = (): JSX.Element => {
                     className={clsx(
                         "max-w-box inline-block w-full overflow-x-visible whitespace-nowrap rounded-lg bg-transparent px-4 font-medium",
                     )}
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
                     aria-label="Preview text"
                 />
             </div>

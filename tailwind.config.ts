@@ -36,6 +36,7 @@ export default {
                 error: "#A63D40",
                 "error-dark": "#853133",
                 "error-bright": "#B55654",
+                caution: "#EAC435",
             },
             maxWidth: {
                 box: "640px",

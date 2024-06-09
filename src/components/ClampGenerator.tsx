@@ -15,6 +15,7 @@ import selectText from "../helpers/selectText";
 // Assets
 import angleup from "../assets/images/angleup.svg";
 import error from "../assets/images/error.svg";
+import info from "../assets/images/info.svg";
 
 // Hooks
 import useTypingEffect from "../hooks/useTypingEffect";
@@ -114,7 +115,7 @@ const ClampGenerator = (): JSX.Element => {
     /**
      * Error handling.
      */
-    type ErrorFields = {
+    type Fields = {
         minViewportWidth?: string;
         maxViewportWidth?: string;
         minValue?: string;
@@ -122,7 +123,7 @@ const ClampGenerator = (): JSX.Element => {
         remSize?: string;
     };
 
-    const [errors, setErrors] = useState<ErrorFields>({});
+    const [errors, setErrors] = useState<Fields>({});
     const [errorMessages, setErrorMessages] = useState("");
 
     // We set error messages when the errors object changes.
@@ -137,6 +138,20 @@ const ClampGenerator = (): JSX.Element => {
     useEffect(() => {
         setHasErrors(!!errorMessages);
     }, [errorMessages]);
+
+    const [cautions, setCautions] = useState<Fields>({});
+    const [cautionMessages, setCautionMessages] = useState("");
+
+    // Similarly we set caution messages when the errors object changes.
+    useEffect(() => {
+        setCautionMessages(
+            Object.values(cautions)
+                .filter(
+                    (caution, index, self) => self.indexOf(caution) === index,
+                )
+                .join("\n"),
+        );
+    }, [cautions]);
 
     const TYPING_SPEED: number = 50;
     const VARIANCE: number = 20;
@@ -172,7 +187,11 @@ const ClampGenerator = (): JSX.Element => {
     useEffect(() => {
         setErrors({});
 
-        const { result, errors: newErrors } = generateClamp(
+        const {
+            result,
+            errors: newErrors,
+            cautions: newCautions,
+        } = generateClamp(
             minViewportWidth,
             minViewportWidthUnit,
             maxViewportWidth,
@@ -185,13 +204,20 @@ const ClampGenerator = (): JSX.Element => {
         );
 
         if (newErrors) {
-            const errorObject: ErrorFields = newErrors.reduce((acc, curr) => {
+            const errorObject: Fields = newErrors.reduce((acc, curr) => {
                 return { ...acc, [curr.param]: curr.message };
             }, {});
 
             setErrors(errorObject);
         } else {
             typeof result === "string" && setClampValue(result);
+        }
+
+        if (newCautions) {
+            const cautionObject: Fields = newCautions.reduce((acc, curr) => {
+                return { ...acc, [curr.param]: curr.message };
+            }, {});
+            setCautions(cautionObject);
         }
     }, [minViewportWidth, maxViewportWidth, minValue, maxValue]);
 
@@ -223,6 +249,7 @@ const ClampGenerator = (): JSX.Element => {
                     selectValue={minViewportWidthUnit}
                     selectOnChange={setMinViewportWidthUnit}
                     error={errors.minViewportWidth !== undefined}
+                    caution={cautions.minViewportWidth !== undefined}
                 />
                 <NumberInputWithSelect
                     label="Max viewport width"
@@ -231,6 +258,7 @@ const ClampGenerator = (): JSX.Element => {
                     selectValue={maxViewportWidthUnit}
                     selectOnChange={setMaxViewportWidthUnit}
                     error={errors.maxViewportWidth !== undefined}
+                    caution={cautions.maxViewportWidth !== undefined}
                 />
                 <NumberInputWithSelect
                     label="Min value"
@@ -239,6 +267,7 @@ const ClampGenerator = (): JSX.Element => {
                     selectValue={minValueUnit}
                     selectOnChange={setMinValueUnit}
                     error={errors.minValue !== undefined}
+                    caution={cautions.minValue !== undefined}
                 />
                 <NumberInputWithSelect
                     label="Max value"
@@ -247,24 +276,55 @@ const ClampGenerator = (): JSX.Element => {
                     selectValue={maxValueUnit}
                     selectOnChange={setMaxValueUnit}
                     error={errors.maxValue !== undefined}
+                    caution={cautions.maxValue !== undefined}
                 />
-
                 {!!errorMessages && (
-                    <div className="test col-span-2 mt-6 flex gap-2.5 rounded-md bg-error-dark px-3 py-2.5 text-sm leading-[1.7] text-white">
-                        <img src={error} className="h-fit" alt="Error icon" />
-                        <div className="grid">
+                    <div className="col-span-2 mt-6 flex items-center gap-2.5 rounded-md bg-error-dark px-3 py-2.5 text-sm text-white">
+                        <img
+                            src={error}
+                            className="h-fit"
+                            alt="Error icon"
+                            aria-hidden="true"
+                        />
+                        <ul className="flex list-none flex-col gap-1">
                             {errorMessages.split("\n").map((line, index) => (
-                                <span key={index}>
+                                <li
+                                    key={index}
+                                    className="font-medium leading-normal"
+                                >
                                     {line}
-                                    <br />
-                                </span>
+                                </li>
                             ))}
-                        </div>
+                        </ul>
                     </div>
                 )}
-                {/* CAUTION MESSAGE IF NEGATIVE SLOPE! */}
+                {!errorMessages && !!cautionMessages && (
+                    <div className="bg-caution col-span-2 mt-6 flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm text-dark">
+                        <img
+                            src={info}
+                            className="h-fit"
+                            alt="Info icon"
+                            aria-hidden="true"
+                        />
+                        <ul className="flex list-none flex-col gap-1">
+                            {cautionMessages.split("\n").map((line, index) => (
+                                <li
+                                    key={index}
+                                    className="font-medium leading-normal"
+                                >
+                                    {line}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
                 {!errorMessages && !!clampValue && (
-                    <div className="col-span-2 mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
+                    <div
+                        className={clsx(
+                            "col-span-2 flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0",
+                            cautionMessages ? "mt-2" : "mt-6",
+                        )}
+                    >
                         <code
                             className={clsx(
                                 "block max-w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md bg-onyx px-4 py-3 text-sm text-white max-sm:w-full max-sm:rounded-md sm:py-2.5 sm:text-base",
