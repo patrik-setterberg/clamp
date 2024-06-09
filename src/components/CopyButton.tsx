@@ -30,7 +30,7 @@ const CopyButton = (props: CopyButtonProps): JSX.Element => {
             type="submit"
             className={clsx(
                 "copy-button",
-                "flex w-fit justify-center rounded-md bg-blue px-[22px] py-3 text-sm font-bold text-black outline-2 outline-offset-2 outline-transparent max-[500px]:w-full sm:rounded-l-none sm:px-4",
+                "flex w-full sm:w-fit justify-center rounded-md bg-blue px-[22px] py-3 text-sm font-bold text-black outline-2 outline-offset-2 outline-transparent sm:rounded-l-none sm:px-4",
                 "hover:bg-light-blue",
                 "focus-visible:bg-light-blue focus-visible:outline-blue",
                 "transition-colors duration-100 ease-out",

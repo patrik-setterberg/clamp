@@ -25,17 +25,23 @@ const PreviewText = (): JSX.Element => {
      * Displays the current font-size in pixels and rems.
      */
     function setSizeText(): void {
-        if (previewInputRef.current && sizeTextRef.current) {
+        if (
+            previewInputRef.current &&
+            pxSizeRef.current &&
+            remSizeRef.current
+        ) {
             // Get the current font size of the text.
             const fontSize: string = window.getComputedStyle(
                 previewInputRef.current,
             ).fontSize;
             const fontSizeInRem: number = parseFloat(fontSize) / 16;
-            sizeTextRef.current.innerText = `Current font-size is ${roundToFourDecimals(parseFloat(fontSize))}px / ${roundToFourDecimals(fontSizeInRem)}rem`;
+            pxSizeRef.current.innerText = `${roundToFourDecimals(parseFloat(fontSize))}px`;
+            remSizeRef.current.innerText = `${roundToFourDecimals(fontSizeInRem)}rem`;
         }
     }
 
-    const sizeTextRef = useRef<HTMLParagraphElement>(null);
+    const pxSizeRef = useRef<HTMLSpanElement>(null);
+    const remSizeRef = useRef<HTMLSpanElement>(null);
     const previewInputRef = useRef<HTMLInputElement>(null);
 
     // Update the paragraph text when the clamp value changes.
@@ -158,16 +164,28 @@ const PreviewText = (): JSX.Element => {
                 maxWidth: `${maxViewportWidthInPixelsRef.current - 32}px`,
             }}
         >
-            <p
-                className="max-w-box inline-block w-full px-4 text-sm"
-                ref={sizeTextRef}
-            ></p>
+            <p className="max-w-box inline-block w-full px-4 text-sm">
+                Current{" "}
+                <code
+                    className={clsx(
+                        "rounded-sm px-1 py-0.5 font-semibold leading-[1] transition duration-1000 ease-out",
+                        backgroundIsVisible || isOverflowing
+                            ? "transparent"
+                            : "bg-white-50",
+                    )}
+                >
+                    font-size
+                </code>{" "}
+                is <span className="font-bold" ref={pxSizeRef}></span> /{" "}
+                <span className="font-bold" ref={remSizeRef}></span>
+            </p>
             <div
                 className={clsx(
-                    "flex w-full justify-center pb-4 pt-2 text-center leading-normal",
+                    "flex w-full justify-center pb-4 pt-2 text-center leading-loose",
                 )}
             >
                 <input
+                    type="text"
                     ref={previewInputRef}
                     style={{
                         fontSize: clampValue,
@@ -177,6 +195,7 @@ const PreviewText = (): JSX.Element => {
                     )}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
+                    aria-label="Preview text"
                 />
             </div>
         </div>
