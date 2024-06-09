@@ -5,8 +5,15 @@ import { clsx } from "clsx/lite";
 import { useStore } from "../store/uiToolsStore";
 
 // Helpers.
-import formatNumber from "../helpers/formatNumber";
+import roundToFourDecimals from "../helpers/roundToFourDecimals";
 
+/**
+ * Renders a preview text component with dynamic font size and visibility effects.
+ * The font size is based on the clamp value and
+ * the visibility effects are based on the viewport width.
+ *
+ * @returns The rendered PreviewText component.
+ */
 const PreviewText = (): JSX.Element => {
     const clampValue = useStore((state) => state.clampValue);
     const maxViewportWidth = useStore((state) => state.maxViewportWidth);
@@ -14,37 +21,26 @@ const PreviewText = (): JSX.Element => {
         (state) => state.maxViewportWidthUnit,
     );
 
-    const [previewTextIsVisible, setPreviewTextIsVisible] =
-        useState<boolean>(false);
-
-    // Show preview text shortly after initial load.
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setPreviewTextIsVisible(true);
-        }, 200);
-
-        return () => clearTimeout(timer);
-    }, []);
-
     /**
-     * Sets the paragraph text and displays the font size in pixels and rems.
+     * Displays the current font-size in pixels and rems.
      */
-    function setParagraphText(): void {
-        if (previewTextRef.current) {
+    function setSizeText(): void {
+        if (previewInputRef.current && sizeTextRef.current) {
             // Get the current font size of the text.
             const fontSize: string = window.getComputedStyle(
-                previewTextRef.current,
+                previewInputRef.current,
             ).fontSize;
             const fontSizeInRem: number = parseFloat(fontSize) / 16;
-            previewTextRef.current.innerText = `This text's font-size is ${formatNumber(parseFloat(fontSize))}px / ${formatNumber(fontSizeInRem)}rem`;
+            sizeTextRef.current.innerText = `Current font-size is ${roundToFourDecimals(parseFloat(fontSize))}px / ${roundToFourDecimals(fontSizeInRem)}rem`;
         }
     }
 
-    const previewTextRef = useRef<HTMLParagraphElement>(null);
+    const sizeTextRef = useRef<HTMLParagraphElement>(null);
+    const previewInputRef = useRef<HTMLInputElement>(null);
 
     // Update the paragraph text when the clamp value changes.
     useEffect(() => {
-        setParagraphText();
+        setSizeText();
     }, [clampValue]);
 
     const [maxViewportWidthInPixels, setMaxViewportWidthInPixels] =
@@ -66,11 +62,30 @@ const PreviewText = (): JSX.Element => {
         setMaxViewportWidthInPixels(maxViewportWidthInPixelsRef.current);
     }, [maxViewportWidth]);
 
-    const timeoutRef = useRef<number | null>(null);
+    const resizeTimeoutRef = useRef<number | null>(null);
     const [backgroundIsVisible, setBackgroundIsVisible] =
         useState<boolean>(false);
     const [borderIsVisible, setBorderIsVisible] = useState<boolean>(false);
     const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
+
+    /**
+     * Checks if the preview text is overflowing its parent container.
+     *
+     * @returns {boolean} True if the preview text is overflowing, false otherwise.
+     */
+    function checkIsOverflowing(): boolean {
+        if (previewInputRef.current && previewInputRef.current.parentElement) {
+            const element = previewInputRef.current;
+            const parent = previewInputRef.current.parentElement;
+
+            return (
+                element.scrollWidth > parent.clientWidth ||
+                element.scrollHeight > parent.clientHeight
+            );
+        }
+
+        return false;
+    }
 
     /**
      * Handles the resize event of the window.
@@ -78,22 +93,19 @@ const PreviewText = (): JSX.Element => {
      * and hides them after a short delay.
      */
     const handleResize = (): void => {
-        setParagraphText();
+        setSizeText();
         setBackgroundIsVisible(true);
         setBorderIsVisible(
-            window.innerWidth <= maxViewportWidthInPixelsRef.current + 32,
+            window.innerWidth <= maxViewportWidthInPixelsRef.current,
         );
-        previewTextRef.current &&
-            setIsOverflowing(
-                previewTextRef.current.scrollWidth >
-                    previewTextRef.current.clientWidth,
-            );
 
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
+        setIsOverflowing(checkIsOverflowing());
+
+        if (resizeTimeoutRef.current) {
+            clearTimeout(resizeTimeoutRef.current);
         }
 
-        timeoutRef.current = setTimeout(() => {
+        resizeTimeoutRef.current = setTimeout(() => {
             setBackgroundIsVisible(false);
             setBorderIsVisible(false);
         }, 1000);
@@ -109,40 +121,64 @@ const PreviewText = (): JSX.Element => {
 
     // Update the isOverflowing state when the max viewport width changes.
     useEffect(() => {
-        previewTextRef.current &&
-            setIsOverflowing(
-                previewTextRef.current.scrollWidth >
-                    previewTextRef.current.clientWidth,
-            );
+        setIsOverflowing(checkIsOverflowing());
+    }, [maxViewportWidth, clampValue]);
+
+    const maxViewportWidthTimerRef = useRef<number | null>(null);
+    useEffect(() => {
+        setBackgroundIsVisible(true);
+        setBorderIsVisible(
+            window.innerWidth <= maxViewportWidthInPixelsRef.current,
+        );
+
+        if (maxViewportWidthTimerRef.current) {
+            clearTimeout(maxViewportWidthTimerRef.current);
+        }
+
+        maxViewportWidthTimerRef.current = setTimeout(() => {
+            setBackgroundIsVisible(false);
+            setBorderIsVisible(false);
+        }, 1000);
     }, [maxViewportWidth]);
+
+    const [text, setText] = useState("I, too, am moist (edit me)");
 
     return (
         <div
-            className="mx-auto mt-12 flex w-full justify-center"
+            className={clsx(
+                "mx-auto mt-8 flex w-full flex-col items-center rounded-lg border pt-4 text-white transition duration-1000 ease-out",
+                backgroundIsVisible || isOverflowing
+                    ? "bg-white-50"
+                    : "bg-transparent",
+                borderIsVisible || isOverflowing
+                    ? "border-white-500"
+                    : "border-transparent",
+            )}
             style={{
-                maxWidth: `${maxViewportWidthUnit === "rem" ? maxViewportWidth * 16 : maxViewportWidth}px`,
+                maxWidth: `${maxViewportWidthInPixelsRef.current - 32}px`,
             }}
         >
             <p
-                style={{
-                    fontSize: clampValue || "1rem",
-                }}
+                className="max-w-box inline-block w-full px-4 text-sm"
+                ref={sizeTextRef}
+            ></p>
+            <div
                 className={clsx(
-                    "inline-block w-full font-medium overflow-x-auto whitespace-nowrap rounded-lg border p-4 text-center leading-normal text-white transition duration-500",
-                    previewTextIsVisible
-                        ? "scale-100 opacity-100"
-                        : "scale-90 opacity-0",
-                    backgroundIsVisible || isOverflowing
-                        ? "bg-white-50"
-                        : "bg-transparent",
-                    borderIsVisible || isOverflowing
-                        ? "border-white-500"
-                        : "border-transparent",
+                    "flex w-full justify-center pb-4 pt-2 text-center leading-normal",
                 )}
-                ref={previewTextRef}
             >
-                I, too, am moist
-            </p>
+                <input
+                    ref={previewInputRef}
+                    style={{
+                        fontSize: clampValue,
+                    }}
+                    className={clsx(
+                        "max-w-box inline-block w-full overflow-x-visible whitespace-nowrap rounded-lg bg-transparent px-4 font-medium",
+                    )}
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                />
+            </div>
         </div>
     );
 };

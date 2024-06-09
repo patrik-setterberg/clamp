@@ -1,4 +1,4 @@
-import roundToThreeDecimals from "./roundToThreeDecimals";
+import roundToFourDecimals from "./roundToFourDecimals";
 import convertToPixels from "./convertToPixels";
 
 type GenerateClampResult = {
@@ -110,8 +110,8 @@ const generateClamp = (
     const intercept = convertedMinValue - slope * convertedMinViewportWidth;
 
     // Convert slope and intercept to correct units.
-    const slopeVw = roundToThreeDecimals(slope * 100);
-    const interceptRem = roundToThreeDecimals(intercept / remSize);
+    const slopeVw = roundToFourDecimals(slope * 100);
+    const interceptRem = roundToFourDecimals(intercept / remSize);
 
     // Check if slopeVw and interceptRem are negative.
     const slopeStr = slopeVw < 0 ? `- ${Math.abs(slopeVw)}vw` : `${slopeVw}vw`;
@@ -121,7 +121,7 @@ const generateClamp = (
             : `+ ${interceptRem}rem`;
 
     return {
-        result: `clamp(${roundToThreeDecimals(convertedMinValue / remSize)}rem, ${slopeStr} ${interceptStr}, ${roundToThreeDecimals(convertedMaxValue / remSize)}rem)`,
+        result: `clamp(${roundToFourDecimals(convertedMinValue / remSize)}rem, ${slopeStr} ${interceptStr}, ${roundToFourDecimals(convertedMaxValue / remSize)}rem)`,
     };
 };
 
