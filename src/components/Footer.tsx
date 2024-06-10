@@ -9,7 +9,7 @@ import githubIcon from "../assets/images/github-mark-white.svg";
  * @returns {JSX.Element} The rendered main component.
  */
 const Footer = (): JSX.Element => {
-    const REPO_URL = "https://github.com/patrik-setterberg/fe-tools";
+    const REPO_URL = "https://github.com/patrik-setterberg/clamp";
 
     return (
         <footer className="flex justify-center p-4">
