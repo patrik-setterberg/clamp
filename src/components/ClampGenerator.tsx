@@ -4,6 +4,7 @@ import clsx from "clsx/lite";
 // Components
 import NumberInputWithSelect from "./NumberInputWithSelect";
 import CopyButton from "./CopyButton";
+import MessageList from "./MessageList";
 
 // Store
 import { useStore } from "../store/uiToolsStore";
@@ -22,6 +23,8 @@ import useTypingEffect from "../hooks/useTypingEffect";
 
 /**
  * A component that generates a CSS clamp value based on user input.
+ * 
+ * @returns The rendered ClampGenerator component.
  */
 const ClampGenerator = (): JSX.Element => {
     /**
@@ -107,14 +110,14 @@ const ClampGenerator = (): JSX.Element => {
         setClampValue: state.setClampValue,
     }));
 
+    /**
+     * Messages (error, caution) handling.
+     */
     const { setHasErrors } = useStore((state) => ({
         hasErrors: state.hasErrors,
         setHasErrors: state.setHasErrors,
     }));
 
-    /**
-     * Error handling.
-     */
     type Fields = {
         minViewportWidth?: string;
         maxViewportWidth?: string;
@@ -279,44 +282,18 @@ const ClampGenerator = (): JSX.Element => {
                     caution={cautions.maxValue !== undefined}
                 />
                 {!!errorMessages && (
-                    <div className="col-span-2 mt-6 flex items-center gap-2.5 rounded-md bg-error-dark px-3 py-2.5 text-sm text-white">
-                        <img
-                            src={error}
-                            className="h-fit"
-                            alt="Error icon"
-                            aria-hidden="true"
-                        />
-                        <ul className="flex list-none flex-col gap-1">
-                            {errorMessages.split("\n").map((line, index) => (
-                                <li
-                                    key={index}
-                                    className="font-medium leading-normal"
-                                >
-                                    {line}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <MessageList
+                        messages={errorMessages}
+                        type="error"
+                        icon={error}
+                    />
                 )}
                 {!errorMessages && !!cautionMessages && (
-                    <div className="bg-caution col-span-2 mt-6 flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm text-dark">
-                        <img
-                            src={info}
-                            className="h-fit"
-                            alt="Info icon"
-                            aria-hidden="true"
-                        />
-                        <ul className="flex list-none flex-col gap-1">
-                            {cautionMessages.split("\n").map((line, index) => (
-                                <li
-                                    key={index}
-                                    className="font-medium leading-normal"
-                                >
-                                    {line}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <MessageList
+                        messages={cautionMessages}
+                        type="caution"
+                        icon={info}
+                    />
                 )}
                 {!errorMessages && !!clampValue && (
                     <div
@@ -327,8 +304,7 @@ const ClampGenerator = (): JSX.Element => {
                     >
                         <code
                             className={clsx(
-                                "block max-w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md bg-onyx px-4 py-3 text-sm text-white max-sm:w-full max-sm:rounded-md sm:py-2.5 sm:text-base",
-                                "focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-blue hover:focus-visible:outline-none sm:focus-visible:mr-1.5",
+                                "max-w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md bg-onyx px-4 py-3 text-sm text-white max-sm:w-full max-sm:rounded-md sm:py-2.5 sm:text-base",
                             )}
                             onClick={selectText}
                         >

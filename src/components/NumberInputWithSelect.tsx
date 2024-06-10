@@ -36,12 +36,11 @@ const NumberInputWithSelect = ({
     error,
     caution,
 }: NumberInputWithSelectProps): JSX.Element => {
-
     const hasErrors = useStore((state) => state.hasErrors);
 
     /**
      * Handles the change event of the input element.
-     * 
+     *
      * @param event - The change event object.
      */
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

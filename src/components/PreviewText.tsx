@@ -166,7 +166,7 @@ const PreviewText = (): JSX.Element => {
                 maxWidth: `${maxViewportWidthInPixelsRef.current - 32}px`,
             }}
         >
-            <p className="max-w-box inline-block w-full px-4 text-sm">
+            <p className="inline-block w-full max-w-box px-4 text-sm">
                 Current{" "}
                 <code
                     className={clsx(
@@ -193,7 +193,7 @@ const PreviewText = (): JSX.Element => {
                         fontSize: clampValue,
                     }}
                     className={clsx(
-                        "max-w-box inline-block w-full overflow-x-visible whitespace-nowrap rounded-lg bg-transparent px-4 font-medium",
+                        "inline-block w-full max-w-box overflow-x-visible whitespace-nowrap rounded-lg bg-transparent px-4 font-medium",
                     )}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
