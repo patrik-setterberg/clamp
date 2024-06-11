@@ -3,6 +3,7 @@ import { persist, PersistStorage } from "zustand/middleware";
 
 // Clamp generator state values for the store.
 type ClampGeneratorStateValues = {
+    showInstructions: boolean;
     minViewportWidth: number;
     maxViewportWidth: number;
     minValue: number;
@@ -18,6 +19,7 @@ type ClampGeneratorStateValues = {
 
 // The store, including state values and actions.
 type Store = ClampGeneratorStateValues & {
+    setShowInstructions: (value: boolean) => void;
     setMinViewportWidth: (value: number) => void;
     setMaxViewportWidth: (value: number) => void;
     setMinValue: (value: number) => void;
@@ -32,10 +34,11 @@ type Store = ClampGeneratorStateValues & {
 
 // Default state values for the store.
 const defaultState: ClampGeneratorStateValues = {
+    showInstructions: true,
     minViewportWidth: 600,
     maxViewportWidth: 1400,
-    minValue: 16,
-    maxValue: 24,
+    minValue: 20,
+    maxValue: 32,
     remSize: 16, // CONSTANT. MAYBE ADD FUNCTIONALITY TO CHANGE THIS LATER.
     minViewportWidthUnit: "px",
     maxViewportWidthUnit: "px",
@@ -86,6 +89,7 @@ export const useStore = create<Store>(
     persist(
         (set) => ({
             ...defaultState,
+            setShowInstructions: (value) => set({ showInstructions: value }),
             setMinViewportWidth: (value) => set({ minViewportWidth: value }),
             setMaxViewportWidth: (value) => set({ maxViewportWidth: value }),
             setMinValue: (value) => set({ minValue: value }),
@@ -106,6 +110,7 @@ export const useStore = create<Store>(
                 const state = persistedState as Partial<Store>;
                 if (state) {
                     return {
+                        showInstructions: state.showInstructions as boolean,
                         minViewportWidth: Number(state.minViewportWidth),
                         maxViewportWidth: Number(state.maxViewportWidth),
                         minValue: Number(state.minValue),
