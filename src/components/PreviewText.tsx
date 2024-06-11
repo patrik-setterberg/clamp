@@ -15,6 +15,10 @@ import roundToFourDecimals from "../helpers/roundToFourDecimals";
  * @returns The rendered PreviewText component.
  */
 const PreviewText = (): JSX.Element => {
+    const [inputValue, setInputValue] = useState<string>(
+        "I, too, am moist (edit me)",
+    );
+
     const clampValue = useStore((state) => state.clampValue);
     const maxViewportWidth = useStore((state) => state.maxViewportWidth);
     const maxViewportWidthUnit = useStore(
@@ -75,7 +79,7 @@ const PreviewText = (): JSX.Element => {
     const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
 
     /**
-     * Checks if the preview text is overflowing its parent container.
+     * Checks if the preview text is overflowing its container.
      *
      * @returns {boolean} True if the preview text is overflowing, false otherwise.
      */
@@ -125,10 +129,10 @@ const PreviewText = (): JSX.Element => {
         };
     }, []);
 
-    // Update the isOverflowing state when the max viewport width changes.
+    // Update the isOverflowing state when max viewport width, clampValue, inputValue changes.
     useEffect(() => {
         setIsOverflowing(checkIsOverflowing());
-    }, [maxViewportWidth, clampValue]);
+    }, [maxViewportWidth, clampValue, inputValue]);
 
     const maxViewportWidthTimerRef = useRef<number | null>(null);
     useEffect(() => {
@@ -147,20 +151,12 @@ const PreviewText = (): JSX.Element => {
         }, 1000);
     }, [maxViewportWidth]);
 
-    const [inputValue, setInputValue] = useState<string>(
-        "I, too, am moist (edit me)",
-    );
-
     return (
         <div
             className={clsx(
                 "mx-auto mt-8 flex w-full flex-col items-center rounded-lg border pt-4 text-white transition duration-1000 ease-out",
-                backgroundIsVisible || isOverflowing
-                    ? "bg-white-50"
-                    : "bg-transparent",
-                borderIsVisible || isOverflowing
-                    ? "border-white-500"
-                    : "border-transparent",
+                backgroundIsVisible ? "bg-onyx" : "bg-transparent",
+                borderIsVisible ? "border-white-500" : "border-transparent",
             )}
             style={{
                 maxWidth: `${maxViewportWidthInPixelsRef.current - 32}px`,
@@ -171,9 +167,7 @@ const PreviewText = (): JSX.Element => {
                 <code
                     className={clsx(
                         "rounded-sm px-1 py-0.5 font-semibold leading-[1] transition duration-1000 ease-out",
-                        backgroundIsVisible || isOverflowing
-                            ? "transparent"
-                            : "bg-white-50",
+                        backgroundIsVisible ? "transparent" : "bg-onyx",
                     )}
                 >
                     font-size
@@ -181,11 +175,7 @@ const PreviewText = (): JSX.Element => {
                 is <span className="font-bold" ref={pxSizeRef}></span> /{" "}
                 <span className="font-bold" ref={remSizeRef}></span>
             </p>
-            <div
-                className={clsx(
-                    "flex w-full justify-center pb-4 pt-2 text-center leading-loose",
-                )}
-            >
+            <div className={clsx("flex w-full max-w-box pb-4 pt-2")}>
                 <input
                     type="text"
                     ref={previewInputRef}
@@ -193,7 +183,8 @@ const PreviewText = (): JSX.Element => {
                         fontSize: clampValue,
                     }}
                     className={clsx(
-                        "inline-block w-full max-w-box overflow-x-visible whitespace-nowrap rounded-lg bg-transparent px-4 font-medium",
+                        "preview-text inline-block w-full whitespace-nowrap rounded-lg bg-transparent px-4 font-medium leading-loose overflow-ellipsis transition duration-150 ease-out",
+                        isOverflowing ? "focus:bg-white-50" : "",
                     )}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}

@@ -12,7 +12,7 @@ const Main = (props: { children: ReactNode }): JSX.Element => {
     const { children } = props;
 
     return (
-        <main className="flex h-full flex-grow flex-col px-4 pb-10 pt-24 text-black">
+        <main className="flex h-full flex-grow flex-col px-4 pb-10 pt-20">
             {children}
         </main>
     );

@@ -20,6 +20,7 @@ body {
     font-style: normal;
 }
 
+/* Selection styles. */
 ::selection {
     background-color: #8ab4f8;
     color: #202124;
@@ -35,23 +36,30 @@ body {
     color: #202124;
 }
 
+/* Hide focus styles on hover. */
 *:focus-visible:hover {
     outline: none !important;
 }
 
+/* Hide incremental arrows in number field in WebKit browsers. */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-/* Firefox */
+/* Hide incremental arrows in number field in Firefox. */
 input[type="number"] {
     -moz-appearance: textfield;
 }
 
+/* Button active states. */
 .copy-button:active > div {
     transform: scale(0.95);
+}
+
+.hide-instructions:active > img {
+    transform: scale(0.9);
 }
 
 /* Custom chevron icon from material-icons. */

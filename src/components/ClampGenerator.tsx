@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import clsx from "clsx/lite";
 
 // Components
+import Instructions from "./Instructions";
 import NumberInputWithSelect from "./NumberInputWithSelect";
 import CopyButton from "./CopyButton";
 import MessageList from "./MessageList";
@@ -23,21 +24,22 @@ import useTypingEffect from "../hooks/useTypingEffect";
 
 /**
  * A component that generates a CSS clamp value based on user input.
- * 
+ *
  * @returns The rendered ClampGenerator component.
  */
 const ClampGenerator = (): JSX.Element => {
-    /**
-     * The minimum viewport width value.
-     */
+    // Show instructions state.
+    const { showInstructions } = useStore((state) => ({
+        showInstructions: state.showInstructions,
+    }));
+
+    // The minimum viewport width value.
     const { minViewportWidth, setMinViewportWidth } = useStore((state) => ({
         minViewportWidth: state.minViewportWidth,
         setMinViewportWidth: state.setMinViewportWidth,
     }));
 
-    /**
-     * The unit of the minimum viewport width.
-     */
+    // The unit of the minimum viewport width.
     const { minViewportWidthUnit, setMinViewportWidthUnit } = useStore(
         (state) => ({
             minViewportWidthUnit: state.minViewportWidthUnit,
@@ -45,17 +47,13 @@ const ClampGenerator = (): JSX.Element => {
         }),
     );
 
-    /**
-     * The maximum viewport width value.
-     */
+    // The maximum viewport width value.
     const { maxViewportWidth, setMaxViewportWidth } = useStore((state) => ({
         maxViewportWidth: state.maxViewportWidth,
         setMaxViewportWidth: state.setMaxViewportWidth,
     }));
 
-    /**
-     * The unit of the maximum viewport width.
-     */
+    // The unit of the maximum viewport width.
     const { maxViewportWidthUnit, setMaxViewportWidthUnit } = useStore(
         (state) => ({
             maxViewportWidthUnit: state.maxViewportWidthUnit,
@@ -63,56 +61,42 @@ const ClampGenerator = (): JSX.Element => {
         }),
     );
 
-    /**
-     * The minimum value for the clamp.
-     */
+    //The minimum value for the clamp.
     const { minValue, setMinValue } = useStore((state) => ({
         minValue: state.minValue,
         setMinValue: state.setMinValue,
     }));
 
-    /**
-     * The unit of the minimum value for the clamp.
-     */
+    // The unit of the minimum value for the clamp.
     const { minValueUnit, setMinValueUnit } = useStore((state) => ({
         minValueUnit: state.minValueUnit,
         setMinValueUnit: state.setMinValueUnit,
     }));
 
-    /**
-     * The maximum value for the clamp.
-     */
+    // The maximum value for the clamp.
     const { maxValue, setMaxValue } = useStore((state) => ({
         maxValue: state.maxValue,
         setMaxValue: state.setMaxValue,
     }));
 
-    /**
-     * The unit of the maximum value for the clamp.
-     */
+    // The unit of the maximum value for the clamp.
     const { maxValueUnit, setMaxValueUnit } = useStore((state) => ({
         maxValueUnit: state.maxValueUnit,
         setMaxValueUnit: state.setMaxValueUnit,
     }));
 
-    /**
-     * The base font size in pixels for calculating rem values.
-     */
+    // The base font size in pixels for calculating rem values.
     const { remSize } = useStore((state) => ({
         remSize: state.remSize,
     }));
 
-    /**
-     * The generated clamp value.
-     */
+    // The generated clamp value.
     const { clampValue, setClampValue } = useStore((state) => ({
         clampValue: state.clampValue,
         setClampValue: state.setClampValue,
     }));
 
-    /**
-     * Messages (error, caution) handling.
-     */
+    // Messages (error, caution) handling.
     const { setHasErrors } = useStore((state) => ({
         hasErrors: state.hasErrors,
         setHasErrors: state.setHasErrors,
@@ -224,9 +208,17 @@ const ClampGenerator = (): JSX.Element => {
         }
     }, [minViewportWidth, maxViewportWidth, minValue, maxValue]);
 
+    // Create ref for first input (minViewportWidth).
+    const minViewportWidthInputRef = useRef<HTMLInputElement>(null);
+
+    // Focus the first input when the instructions are hidden.
+    useEffect(() => {
+        !showInstructions && minViewportWidthInputRef.current?.focus();
+    }, [showInstructions]);
+
     return (
         <>
-            <div className="mb-4 flex items-center gap-4">
+            <div className="mb-6 flex items-center gap-4">
                 <div className="rounded-md bg-onyx p-2">
                     <img src={angleup} alt="" />
                 </div>
@@ -236,16 +228,13 @@ const ClampGenerator = (): JSX.Element => {
                     </h2>
                 </div>
             </div>
-            <p className="mb-9 text-sm text-white">
-                Create linearly scaling fluid size values based on viewport
-                width.
-            </p>
-
+            {showInstructions && <Instructions />}
             <form
                 onSubmit={submitHandler}
-                className="grid grid-cols-2 gap-x-3 gap-y-4"
+                className="mt-10 grid grid-cols-2 gap-x-3 gap-y-4"
             >
                 <NumberInputWithSelect
+                    ref={minViewportWidthInputRef}
                     label="Min viewport width"
                     inputValue={String(minViewportWidth)}
                     inputOnChange={setMinViewportWidth}

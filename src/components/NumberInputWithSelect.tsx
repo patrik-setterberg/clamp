@@ -1,3 +1,5 @@
+import { forwardRef } from "react";
+
 import clsx from "clsx/lite";
 
 // Store.
@@ -27,15 +29,20 @@ type NumberInputWithSelectProps = {
  * @param {boolean} props.caution - Indicates whether there is a caution message associated with the input value.
  * @returns {JSX.Element} The rendered NumberInputWithSelect component.
  */
-const NumberInputWithSelect = ({
-    inputOnChange,
-    inputValue,
-    selectValue,
-    selectOnChange,
-    label,
-    error,
-    caution,
-}: NumberInputWithSelectProps): JSX.Element => {
+const NumberInputWithSelect = forwardRef<
+    HTMLInputElement,
+    NumberInputWithSelectProps
+>((props, ref): JSX.Element => {
+    const {
+        label,
+        inputValue,
+        inputOnChange,
+        selectValue,
+        selectOnChange,
+        error,
+        caution,
+    } = props;
+
     const hasErrors = useStore((state) => state.hasErrors);
 
     /**
@@ -80,13 +87,14 @@ const NumberInputWithSelect = ({
                 {label}
             </span>
             <input
+                ref={ref}
                 type="number"
                 onChange={handleInputChange}
                 value={inputValue}
                 className={clsx(
-                    "monospace w-full rounded-md border border-solid bg-transparent px-4 py-2 text-base tracking-wide text-white",
+                    "monospace w-full rounded-md border border-solid bg-transparent px-4 py-2 text-base tracking-wide text-white outline-2 outline-offset-2 outline-transparent",
                     "transition duration-100 ease-out",
-                    "focus-visible:outline-none",
+                    "focus-visible:outline-light-blue",
                     error
                         ? "error border-error"
                         : caution && !hasErrors
@@ -114,6 +122,6 @@ const NumberInputWithSelect = ({
             </select>
         </label>
     );
-};
+});
 
 export default NumberInputWithSelect;
