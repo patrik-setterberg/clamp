@@ -44,7 +44,7 @@ const CopyButton = (props: CopyButtonProps): JSX.Element => {
                         src={copy}
                         className={clsx(
                             "absolute",
-                            "transition duration-150 ease-out",
+                            "transition duration-100 ease-out",
                             copySuccess ? "opacity-0" : "opacity-100",
                         )}
                         alt="Copy icon"
@@ -54,7 +54,7 @@ const CopyButton = (props: CopyButtonProps): JSX.Element => {
                         src={done}
                         className={clsx(
                             "absolute",
-                            "transition duration-150 ease-out",
+                            "transition duration-100 ease-out",
                             copySuccess ? "opacity-100" : "opacity-0",
                         )}
                         alt="Checkmark icon"
