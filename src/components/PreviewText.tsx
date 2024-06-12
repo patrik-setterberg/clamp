@@ -154,42 +154,41 @@ const PreviewText = (): JSX.Element => {
     return (
         <div
             className={clsx(
-                "mx-auto mt-8 flex w-full flex-col items-center rounded-lg border pt-4 text-white transition duration-1000 ease-out",
+                "mx-auto mt-8 flex w-full flex-col items-center rounded-lg border pt-4 text-white",
+                "transition duration-1000 ease-out",
                 backgroundIsVisible ? "bg-onyx" : "bg-transparent",
-                borderIsVisible ? "border-white-500" : "border-transparent",
+                borderIsVisible ? "border-white" : "border-transparent",
             )}
             style={{
                 maxWidth: `${maxViewportWidthInPixelsRef.current - 32}px`,
             }}
         >
-            <p className="inline-block w-full max-w-box px-4 text-sm">
-                Current{" "}
-                <code
-                    className={clsx(
-                        "rounded-sm px-1 py-0.5 font-semibold leading-[1] transition duration-1000 ease-out",
-                        backgroundIsVisible ? "transparent" : "bg-onyx",
-                    )}
-                >
-                    font-size
-                </code>{" "}
-                is <span className="font-bold" ref={pxSizeRef}></span> /{" "}
-                <span className="font-bold" ref={remSizeRef}></span>
+            <p className="inline-block w-full max-w-box px-4 text-[0.9375rem]">
+                Current <code className="font-semibold">font-size</code> is:{" "}
+                <code className="font-semibold" ref={pxSizeRef}></code> /{" "}
+                <code className="font-semibold" ref={remSizeRef}></code>
             </p>
-            <div className={clsx("flex w-full max-w-box pb-4 pt-2")}>
+            <div className="flex w-full max-w-box pb-4 pt-2">
                 <input
                     type="text"
                     ref={previewInputRef}
                     style={{
                         fontSize: clampValue,
                     }}
+                    placeholder="Enter text here"
                     className={clsx(
-                        "preview-text inline-block w-full whitespace-nowrap rounded-lg bg-transparent px-4 font-medium leading-loose overflow-ellipsis transition duration-150 ease-out",
-                        isOverflowing ? "focus:bg-white-50" : "",
+                        "preview-text inline-block w-full overflow-ellipsis whitespace-nowrap rounded-lg bg-transparent px-4 font-medium leading-loose outline-2 outline-transparent",
+                        "transition-colors duration-100 ease-out",
+                        "focus-visible:outline-blue",
+                        isOverflowing && "focus-visible:bg-onyx",
                     )}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
-                    aria-label="Preview text"
+                    id="preview-text"
                 />
+                <label htmlFor="preview-text" className="sr-only">
+                    Preview text
+                </label>
             </div>
         </div>
     );
