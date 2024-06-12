@@ -3,7 +3,7 @@ import { clsx } from "clsx/lite";
 import githubIcon from "../assets/images/github-mark.svg";
 import githubIconDarkMode from "../assets/images/github-mark-dark-mode.svg";
 
-// Store
+// Store.
 import { useStore } from "../store/uiToolsStore";
 
 /**
@@ -28,13 +28,15 @@ const Footer = (): JSX.Element => {
                 className={clsx(
                     "rounded-full outline outline-2 outline-offset-2 outline-transparent",
                     "transition duration-100 ease-out",
-                    "focus-visible:outline-blue-soft dark:focus-visible:outline-blue",
+                    "hover:scale-[1.05]",
+                    "focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light",
+                    "active:scale-[0.95]",
                 )}
             >
                 <img
                     src={theme === "dark" ? githubIconDarkMode : githubIcon}
                     alt="GitHub icon"
-                    className="h-7 w-7 transition duration-100 hover:scale-[1.05]"
+                    className="h-7 w-7"
                     aria-hidden="true"
                 />
             </a>

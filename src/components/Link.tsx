@@ -29,7 +29,7 @@ const Link = ({ href, children, newTab }: LinkProps): JSX.Element => {
                 "decoration text-blue-ocean rounded-sm font-bold underline decoration-current underline-offset-[1px] outline outline-2 outline-offset-2 outline-transparent dark:text-blue",
                 "transition-colors duration-100 ease-out",
                 "hover:text-blue-ocean dark:hover:text-blue-light hover:!decoration-current hover:decoration-2",
-                "focus-visible:text-blue-ocean dark:focus-visible:text-blue-light hover:focus-visible:outline-transparent focus-visible:decoration-transparent focus-visible:outline-current",
+                "focus-visible:text-blue-ocean dark:focus-visible:text-blue-light hover:focus-visible:outline-transparent focus-visible:decoration-transparent focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light",
             )}
             {...linkProps}
         >
