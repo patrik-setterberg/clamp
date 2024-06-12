@@ -1,3 +1,4 @@
+import { clsx } from "clsx/lite";
 import githubIcon from "../assets/images/github-mark-white.svg";
 
 /**
@@ -18,11 +19,15 @@ const Footer = (): JSX.Element => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View this project on GitHub"
+                className={clsx(
+                    "rounded-full outline-2 outline-offset-2 outline-transparent transition-colors duration-100 ease-out",
+                    "focus-visible:outline-blue",
+                )}
             >
                 <img
                     src={githubIcon}
                     alt="GitHub icon"
-                    className="h-7 w-7 transition duration-150 hover:scale-[1.05]"
+                    className="h-7 w-7 transition duration-100 hover:scale-[1.05]"
                     aria-hidden="true"
                 />
             </a>
