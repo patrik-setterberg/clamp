@@ -93,7 +93,7 @@ const NumberInputWithSelect = forwardRef<
                 value={inputValue}
                 className={clsx(
                     "monospace w-full rounded-md border border-solid bg-transparent px-4 py-2 text-base tracking-wide text-white outline-2 outline-offset-2 outline-transparent",
-                    "transition duration-100 ease-out",
+                    "transition-colors duration-100 ease-out",
                     "focus-visible:outline-light-blue",
                     error
                         ? "error border-error"
