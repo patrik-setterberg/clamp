@@ -24,13 +24,17 @@ const MessageList = ({
 }: MessageListProps): JSX.Element => {
     const altText: string = `${type} icon`;
 
+    const colorClasses =
+        type === "error"
+            ? "bg-red-burgundy dark:bg-red-dark text-white"
+            : "bg-yellow-mustard text-almost-black dark:text-gray-darker";
+
     return (
         <div
             className={clsx(
                 "col-span-2 mt-6 flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm",
-                type === "error"
-                    ? "bg-error-dark text-white"
-                    : "bg-caution text-dark",
+                "transition-colors duration-100 ease-out",
+                colorClasses,
             )}
         >
             <img

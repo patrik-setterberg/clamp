@@ -16,6 +16,7 @@ import selectText from "../helpers/selectText";
 
 // Assets
 import angleup from "../assets/images/angleup.svg";
+import angleupDarkMode from "../assets/images/angleup-dark-mode.svg";
 import error from "../assets/images/error.svg";
 import info from "../assets/images/info.svg";
 
@@ -28,6 +29,9 @@ import useTypingEffect from "../hooks/useTypingEffect";
  * @returns The rendered ClampGenerator component.
  */
 const ClampGenerator = (): JSX.Element => {
+    // Theme state.
+    const theme = useStore((state) => state.theme);
+
     // Show instructions state.
     const { showInstructions } = useStore((state) => ({
         showInstructions: state.showInstructions,
@@ -219,11 +223,25 @@ const ClampGenerator = (): JSX.Element => {
     return (
         <>
             <div className="mb-6 flex items-center gap-4">
-                <div className="rounded-md bg-onyx p-2">
-                    <img src={angleup} alt="" />
+                <div
+                    className={clsx(
+                        "bg-gray-silver dark:bg-gray-dark rounded-md p-2",
+                        "transition-colors duration-100 ease-out",
+                    )}
+                >
+                    <img
+                        src={theme === "dark" ? angleupDarkMode : angleup}
+                        alt="Angle up icon"
+                        aria-hidden="true"
+                    />
                 </div>
                 <div>
-                    <h2 className="font-mono text-lg font-semibold text-white">
+                    <h2
+                        className={clsx(
+                            "text-almost-black font-mono text-lg font-semibold dark:text-white",
+                            "transition-colors duration-100 ease-out",
+                        )}
+                    >
                         {title}
                     </h2>
                 </div>
@@ -293,7 +311,8 @@ const ClampGenerator = (): JSX.Element => {
                     >
                         <code
                             className={clsx(
-                                "max-w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md bg-onyx px-4 py-3 text-sm text-white max-sm:w-full max-sm:rounded-md sm:py-2.5 sm:text-base",
+                                "bg-gray-silver dark:bg-gray-dark text-almost-black max-w-full flex-grow overflow-x-auto whitespace-nowrap rounded-bl-md rounded-tl-md px-4 py-3 text-sm max-sm:w-full max-sm:rounded-md sm:py-2.5 sm:text-base dark:text-white",
+                                "transition-colors duration-100 ease-out",
                             )}
                             onClick={selectText}
                         >

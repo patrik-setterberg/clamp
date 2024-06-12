@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 
+import { clsx } from "clsx/lite";
+
 /**
  * Header component.
  *
@@ -11,7 +13,12 @@ const Header = (props: { children: ReactNode }): JSX.Element => {
     const { children } = props;
 
     return (
-        <header className="flex items-center bg-night p-4">
+        <header
+            className={clsx(
+                "bg-gray-mist dark:bg-gray-darkest flex items-center justify-between p-4",
+                "transition-colors duration-100 ease-out",
+            )}
+        >
             {children}
         </header>
     );

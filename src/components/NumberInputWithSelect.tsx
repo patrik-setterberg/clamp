@@ -71,17 +71,32 @@ const NumberInputWithSelect = forwardRef<
         }
     };
 
+    let inputBorderColorClass =
+        "border-gray-neutral dark:border-gray focus-visible:border-transparent";
+    if (error) inputBorderColorClass = "border-red-burgundy dark:border-red";
+    if (caution && !hasErrors)
+        inputBorderColorClass = "border-yellow-dark dark:border-yellow-mustard";
+
+    let inputOutlineClass =
+        "focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light";
+    if (error)
+        inputOutlineClass =
+            "focus-visible:outline-red-burgundy dark:focus-visible:outline-red";
+    if (caution && !hasErrors)
+        inputOutlineClass =
+            "focus-visible:outline-yellow-dark dark:focus-visible:outline-yellow-mustard";
+
     return (
         <label className="relative flex flex-col text-xs">
             <span
                 className={clsx(
-                    "leading-1 absolute block w-fit -translate-y-1/2 translate-x-3 cursor-pointer rounded-sm bg-night px-1 tracking-wide",
+                    "leading-1 bg-white-cloud dark:bg-gray-darkest absolute block w-fit -translate-y-1/2 translate-x-3 cursor-pointer rounded-sm px-1 tracking-wide",
                     "transition duration-100 ease-out",
                     error
-                        ? "text-error"
+                        ? "text-red-burgundy dark:text-red"
                         : caution && !hasErrors
-                          ? "text-caution"
-                          : "text-white",
+                          ? "text-yellow-dark dark:text-yellow-mustard"
+                          : "text-almost-black dark:text-white",
                 )}
             >
                 {label}
@@ -92,14 +107,13 @@ const NumberInputWithSelect = forwardRef<
                 onChange={handleInputChange}
                 value={inputValue}
                 className={clsx(
-                    "monospace w-full rounded-md border border-solid bg-transparent px-4 py-2 text-base tracking-wide text-white outline-2 outline-offset-2 outline-transparent",
+                    "monospace text-almost-black w-full rounded-md border border-solid bg-transparent px-4 py-2 text-base tracking-wide outline outline-2 outline-transparent dark:text-white",
                     "transition-colors duration-100 ease-out",
-                    "focus-visible:outline-light-blue",
-                    error
-                        ? "error border-error"
-                        : caution && !hasErrors
-                          ? "caution border-caution"
-                          : "border-gray",
+                    error && "error",
+                    caution && !hasErrors && "caution",
+                    (error || caution) && "focus-visible:border-transparent",
+                    inputBorderColorClass,
+                    inputOutlineClass,
                 )}
                 aria-label={label}
             />
@@ -107,9 +121,9 @@ const NumberInputWithSelect = forwardRef<
                 name="unit"
                 className={clsx(
                     "select",
-                    "absolute right-[5px] top-1/2 h-8 -translate-y-1/2 cursor-pointer appearance-none rounded-[5px] bg-night px-2 pr-[1.625rem] text-[13px] font-semibold uppercase text-white outline-2 outline-offset-2 outline-transparent",
-                    "hover:bg-onyx",
-                    "focus-visible:bg-onyx focus-visible:outline-light-blue",
+                    "bg-white-cloud dark:bg-gray-darkest text-almost-black absolute right-[5px] top-1/2 h-8 -translate-y-1/2 cursor-pointer appearance-none rounded-[5px] px-2 pr-[1.625rem] text-[13px] font-semibold uppercase outline outline-2 outline-offset-2 outline-transparent dark:text-white",
+                    "hover:bg-gray-silver dark:hover:bg-gray-dark",
+                    "focus-visible:bg-gray-silver dark:focus-visible:bg-gray-dark focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light",
                     "transition-colors duration-100 ease-out ",
                     selectValue === "rem" ? "w-[3.75rem]" : "w-[3.125rem]",
                 )}

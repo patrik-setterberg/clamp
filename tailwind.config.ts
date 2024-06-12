@@ -8,35 +8,39 @@ export default {
      * - minimum viewport width: 500px
      * - maximum viewport width: 1600px
      */
-
     theme: {
         extend: {
             colors: {
+                // Dark mode.
                 blue: "#8ab4f8",
-                "light-blue": "#B4CFFA",
-                "dark-blue": "#58739E",
+                "blue-light": "#B4CFFA",
+                "blue-dark": "#58739E",
+                white: "#e8eaed",
                 gray: "#444746",
-                white: {
-                    // #e8eaed
-                    50: "rgba(232, 234, 237, 0.1)",
-                    100: "rgba(232, 234, 237, 0.2)",
-                    200: "rgba(232, 234, 237, 0.3)",
-                    300: "rgba(232, 234, 237, 0.4)",
-                    400: "rgba(232, 234, 237, 0.5)",
-                    500: "rgba(232, 234, 237, 0.6)",
-                    600: "rgba(232, 234, 237, 0.7)",
-                    700: "rgba(232, 234, 237, 0.8)",
-                    800: "rgba(232, 234, 237, 0.9)",
-                    DEFAULT: "rgba(232, 234, 237, 1)",
-                },
-                onyx: "#333438",
-                dark: "#2d2f31",
-                night: "#28292a",
+                "gray-dark": "#333438",
+                "gray-darker": "#2d2f31",
+                "gray-darkest": "#28292a",
                 black: "#202124",
-                error: "#A63D40",
-                "error-dark": "#853133",
-                "error-bright": "#B55654",
-                caution: "#EAC435",
+                red: "#A63D40",
+                "red-dark": "#853133",
+                "red-light": "#B55654",
+                yellow: "#EAC435",
+
+                // Light mode.
+                "blue-soft": "#83a6d4",
+                "blue-sky": "#B4CFFA",
+                "blue-ocean": "#58739E",
+                "almost-black": "#231F1E",
+                "gray-neutral": "#C0C2C4",
+                "gray-mist": "#D9DBDD",
+                "gray-pale": "#DDDEE0",
+                "gray-silver": "#E4E6E8",
+                "white-cloud": "#ECEEF0",
+                "red-crimson": "#CC4B4B",
+                "red-burgundy": "#993434",
+                "red-salmon": "#F87171",
+                "yellow-mustard": "#F6C453",
+                "yellow-dark": "#DBA632",
             },
             maxWidth: {
                 box: "640px",
@@ -54,4 +58,5 @@ export default {
         },
     },
     plugins: [],
+    darkMode: "selector",
 } satisfies Config;

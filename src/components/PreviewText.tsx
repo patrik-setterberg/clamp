@@ -154,16 +154,25 @@ const PreviewText = (): JSX.Element => {
     return (
         <div
             className={clsx(
-                "mx-auto mt-8 flex w-full flex-col items-center rounded-lg border pt-4 text-white",
-                "transition duration-1000 ease-out",
-                backgroundIsVisible ? "bg-onyx" : "bg-transparent",
-                borderIsVisible ? "border-white" : "border-transparent",
+                "mx-auto mt-8 flex w-full flex-col items-center rounded-lg border pt-4",
+                "transition-colors duration-500 ease-out",
+                backgroundIsVisible
+                    ? "bg-gray-mist dark:bg-gray-dark"
+                    : "bg-transparent",
+                borderIsVisible
+                    ? "border-blue-ocean dark:border-white"
+                    : "border-transparent",
             )}
             style={{
                 maxWidth: `${maxViewportWidthInPixelsRef.current - 32}px`,
             }}
         >
-            <p className="inline-block w-full max-w-box px-4 text-[0.9375rem]">
+            <p
+                className={clsx(
+                    "text-almost-black inline-block w-full max-w-box px-4 text-[0.9375rem] dark:text-white",
+                    "transition-colors duration-100 ease-out",
+                )}
+            >
                 Current <code className="font-semibold">font-size</code> is:{" "}
                 <code className="font-semibold" ref={pxSizeRef}></code> /{" "}
                 <code className="font-semibold" ref={remSizeRef}></code>
@@ -177,10 +186,10 @@ const PreviewText = (): JSX.Element => {
                     }}
                     placeholder="Enter text here"
                     className={clsx(
-                        "preview-text inline-block w-full overflow-ellipsis whitespace-nowrap rounded-lg bg-transparent px-4 font-medium leading-loose outline-2 outline-transparent",
-                        "transition-colors duration-100 ease-out",
-                        "focus-visible:outline-blue",
-                        isOverflowing && "focus-visible:bg-onyx",
+                        "text-almost-black inline-block w-full overflow-ellipsis whitespace-nowrap rounded-lg bg-transparent px-4 font-medium leading-loose outline outline-2 outline-transparent dark:text-white",
+                        "transition-colors !duration-100 ease-out",
+                        "focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light",
+                        isOverflowing && "focus-visible:bg-gray-mist dark:focus-visible:bg-gray-dark",
                     )}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}

@@ -3,6 +3,7 @@ import { persist, PersistStorage } from "zustand/middleware";
 
 // Clamp generator state values for the store.
 type ClampGeneratorStateValues = {
+    theme: "dark" | "light";
     showInstructions: boolean;
     minViewportWidth: number;
     maxViewportWidth: number;
@@ -19,6 +20,7 @@ type ClampGeneratorStateValues = {
 
 // The store, including state values and actions.
 type Store = ClampGeneratorStateValues & {
+    setTheme: (value: "dark" | "light") => void;
     setShowInstructions: (value: boolean) => void;
     setMinViewportWidth: (value: number) => void;
     setMaxViewportWidth: (value: number) => void;
@@ -34,6 +36,7 @@ type Store = ClampGeneratorStateValues & {
 
 // Default state values for the store.
 const defaultState: ClampGeneratorStateValues = {
+    theme: "dark",
     showInstructions: true,
     minViewportWidth: 600,
     maxViewportWidth: 1400,
@@ -89,6 +92,7 @@ export const useStore = create<Store>(
     persist(
         (set) => ({
             ...defaultState,
+            setTheme: (value) => set({ theme: value }),
             setShowInstructions: (value) => set({ showInstructions: value }),
             setMinViewportWidth: (value) => set({ minViewportWidth: value }),
             setMaxViewportWidth: (value) => set({ maxViewportWidth: value }),
@@ -110,6 +114,7 @@ export const useStore = create<Store>(
                 const state = persistedState as Partial<Store>;
                 if (state) {
                     return {
+                        theme: state.theme as "dark" | "light",
                         showInstructions: state.showInstructions as boolean,
                         minViewportWidth: Number(state.minViewportWidth),
                         maxViewportWidth: Number(state.maxViewportWidth),

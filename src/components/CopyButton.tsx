@@ -1,5 +1,6 @@
 import clsx from "clsx/lite";
 
+// Assets.
 import copy from "../assets/images/copy.svg";
 import done from "../assets/images/done.svg";
 
@@ -23,16 +24,14 @@ type CopyButtonProps = {
 const CopyButton = (props: CopyButtonProps): JSX.Element => {
     const { classNames, copySuccess } = props;
 
-
-
     return (
         <button
             type="submit"
             className={clsx(
                 "copy-button",
-                "flex w-full sm:w-fit justify-center rounded-md bg-blue px-[22px] py-3 text-sm font-bold text-black outline-2 outline-offset-2 outline-transparent sm:rounded-l-none sm:px-4",
-                "hover:bg-light-blue",
-                "focus-visible:bg-light-blue focus-visible:outline-blue",
+                "bg-blue-soft text-almost-black flex w-full justify-center rounded-md px-[22px] py-3 text-sm font-bold outline outline-2 outline-offset-2 outline-transparent sm:w-fit sm:rounded-l-none sm:px-4 dark:bg-blue dark:text-black",
+                "hover:bg-blue-sky dark:hover:bg-blue-light",
+                "focus-visible:bg-blue-sky dark:focus-visible:bg-blue-light focus-visible:outline-blue-soft dark:focus-visible:outline-blue",
                 "transition-colors duration-100 ease-out",
                 classNames,
             )}
