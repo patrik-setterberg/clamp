@@ -84,6 +84,18 @@ const generateClamp = (
             message: "Value cannot be negative.",
         });
     }
+    if (convertedMaxValue < convertedMinValue) {
+        errors.push({
+            param: "minValue",
+            message:
+                "Max value cannot be smaller than min value.",
+        });
+        errors.push({
+            param: "maxValue",
+            message:
+                "Max value cannot be smaller than min value.",
+        });
+    }
     // Won't happen right now. Maybe in the future (if we allow changing rem size).
     if (remSize <= 0) {
         errors.push({
@@ -97,19 +109,6 @@ const generateClamp = (
     }
 
     const cautions = [];
-
-    if (convertedMaxValue < convertedMinValue) {
-        cautions.push({
-            param: "minValue",
-            message:
-                "Max value is larger than min value. Please note: In CSS clamp(), if the max value is smaller than the min value, the size won't decrease as viewport width increases.",
-        });
-        cautions.push({
-            param: "maxValue",
-            message:
-                "Max value is larger than min value. Please note: In CSS clamp(), if the max value is smaller than the min value, the size won't decrease as viewport width increases.",
-        });
-    }
 
     if (convertedMaxValue === convertedMinValue) {
         cautions.push({
