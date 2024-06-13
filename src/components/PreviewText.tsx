@@ -189,7 +189,8 @@ const PreviewText = (): JSX.Element => {
                         "text-almost-black inline-block w-full overflow-ellipsis whitespace-nowrap rounded-lg bg-transparent px-4 font-medium leading-loose outline outline-2 outline-transparent dark:text-white",
                         "transition-colors !duration-100 ease-out",
                         "focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light",
-                        isOverflowing && "focus-visible:bg-gray-mist dark:focus-visible:bg-gray-dark",
+                        isOverflowing &&
+                            "focus-visible:bg-gray-mist dark:focus-visible:bg-gray-dark",
                     )}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}

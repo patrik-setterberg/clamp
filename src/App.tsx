@@ -25,10 +25,18 @@ function App() {
     const hasErrors = useStore((state) => state.hasErrors);
     const theme = useStore((state) => state.theme);
 
+    // Set theme class on document.documentElement.
     useEffect(() => {
-        // Set theme class on document.documentElement.
         document.documentElement.className = theme;
     }, [theme]);
+
+    // Prevent animations on page load.
+    useEffect(() => {
+        document.documentElement.classList.add("no-animate");
+        setTimeout(() => {
+            document.documentElement.classList.remove("no-animate");
+        }, 1000);
+    }, []);
 
     return (
         <>
@@ -58,7 +66,7 @@ function App() {
                 <div className="mx-auto mt-2 w-full max-w-box px-4">
                     <p
                         className={clsx(
-                            "text-almost-black text-left text-xs sm:text-right dark:text-gray-pale",
+                            "text-almost-black dark:text-gray-pale text-left text-xs sm:text-right",
                             "transition-colors duration-100 ease-out",
                         )}
                     >

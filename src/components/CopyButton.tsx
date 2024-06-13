@@ -35,6 +35,7 @@ const CopyButton = (props: CopyButtonProps): JSX.Element => {
                 "transition-colors duration-100 ease-out",
                 classNames,
             )}
+            title="Copy to clipboard"
             aria-label="Copy to clipboard"
         >
             <div className="flex origin-bottom items-center gap-[5px]">

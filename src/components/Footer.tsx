@@ -25,10 +25,11 @@ const Footer = (): JSX.Element => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View this project on GitHub"
+                title="View this project on GitHub"
                 className={clsx(
-                    "rounded-full outline outline-2 outline-offset-2 outline-transparent",
+                    "rounded-full outline outline-2 p-[6px] outline-transparent",
                     "transition duration-100 ease-out",
-                    "hover:scale-[1.05]",
+                    "dark:hover:bg-gray-dark hover:scale-[1.075] hover:bg-gray-mist",
                     "focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light",
                     "active:scale-[0.95]",
                 )}

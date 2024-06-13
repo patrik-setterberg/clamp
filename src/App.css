@@ -13,6 +13,11 @@ body {
     margin: 0;
 }
 
+.no-animate * {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+}
+
 .monospace {
     font-family: "Reddit Mono", monospace;
     font-optical-sizing: auto;
@@ -22,8 +27,8 @@ body {
 
 /* Selection styles. */
 ::selection {
-    background-color: #B4CFFA;
-    color: #231F1E;
+    background-color: #b4cffa;
+    color: #231f1e;
 }
 
 .dark ::selection {
@@ -33,21 +38,21 @@ body {
 
 .error::selection {
     background-color: #993434;
-    color: #ECEEF0;
+    color: #eceef0;
 }
 
 .dark .error::selection {
-    background-color: #A63D40;
+    background-color: #a63d40;
     color: #e8eaed;
 }
 
 .caution::selection {
-    background-color: #F6C453;
-    color: #231F1E;
+    background-color: #f6c453;
+    color: #231f1e;
 }
 
 .dark .caution::selection {
-    background-color: #F6C453;
+    background-color: #f6c453;
     color: #202124;
 }
 
@@ -82,4 +87,32 @@ input[type="number"] {
 
 .dark .select {
     background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20version%3D%221.1%22%20id%3D%22Capa_1%22%20viewBox%3D%220%200%20185.344%20185.344%22%20xml%3Aspace%3D%22preserve%22%3E%3Cg%3E%3Cg%3E%3Cpath%20style%3D%22fill%3A%23ffffff%3B%22%20d%3D%22M92.672%2C144.373c-2.752%2C0-5.493-1.044-7.593-3.138L3.145%2C59.301c-4.194-4.199-4.194-10.992%2C0-15.18%20%20%20c4.194-4.199%2C10.987-4.199%2C15.18%2C0l74.347%2C74.341l74.347-74.341c4.194-4.199%2C10.987-4.199%2C15.18%2C0%20%20%20c4.194%2C4.194%2C4.194%2C10.981%2C0%2C15.18l-81.939%2C81.934C98.166%2C143.329%2C95.419%2C144.373%2C92.672%2C144.373z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E") !important;
+}
+
+.icon-rise {
+    animation: rise 0.5s cubic-bezier(0.5, 0, 0.1, 1) forwards;
+}
+
+.icon-set {
+    animation: set 0.4s cubic-bezier(0.6, 0.04, 0.98, 0.335) forwards;
+}
+
+@keyframes rise {
+    0%,
+    20% {
+        transform: translate(-100%, 100%) scale(0.25);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes set {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    80%,
+    100% {
+        transform: translate(100%, 100%) scale(0.25);
+    }
 }
