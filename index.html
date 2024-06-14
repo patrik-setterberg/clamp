@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
     <!-- Hello developer. -->
     <!-- 🤘 -->
     <head>
@@ -12,9 +12,31 @@
             rel="stylesheet"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>clamp.style</title>
+        <title>clamp.zone</title>
+        <script>
+            (function () {
+                let theme = "dark";
+
+                const storedData = localStorage.getItem("clamp-storage");
+                if (storedData)
+                    try {
+                        let parsedData = JSON.parse(storedData);
+                        theme = parsedData.state.state.theme;
+                    } catch (e) {
+                        console.error(
+                            "Error parsing theme from localStorage:",
+                            e,
+                        );
+                    }
+                document.documentElement.className = theme;
+
+                setTimeout(() => {
+                    document.querySelector("body")?.removeAttribute("class");
+                }, 1000);
+            })();
+        </script>
     </head>
-    <body>
+    <body class="no-animate">
         <div
             id="root"
             class="bg-gray-silver flex min-h-screen w-full flex-col overflow-hidden transition-colors duration-100 ease-out dark:bg-black"
