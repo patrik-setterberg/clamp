@@ -1,52 +1,60 @@
 import { useState, useEffect } from "react";
 
 /**
- * A React hook that simulates the effect of typing text character by character.
+ * Custom hook that simulates a typing effect by gradually displaying and erasing text.
  *
- * @param text - The text to be typed.
- * @param typingSpeed - The average speed of typing in milliseconds per character.
- * @param variance - The variance in typing speed. This makes the typing effect more realistic.
- * @returns The text that has been "typed" so far.
+ * @param texts - An array of strings representing the texts to be typed.
+ * @returns A tuple containing the currently displayed text and a boolean indicating if the typing effect is completed.
  */
-function useTypingEffect(text: string, typingSpeed: number, variance: number) {
-    const [outputText, setOutputText] = useState("");
+const useTypingEffect = (texts: string[]): [string, boolean] => {
+    const TYPING_SPEED: number = 40;
+    const VARIANCE: number = 20;
+    const ERASING_SPEED: number = 40;
+    const PAUSE: number = 750;
+
+    const [displayedText, setDisplayedText] = useState("");
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isErasing, setIsErasing] = useState(false);
+    const [isCompleted, setIsCompleted] = useState(false);
 
     useEffect(() => {
-        let index = 0;
-        let timeoutId: number;
+        if (isCompleted) return;
 
-        setOutputText(text.charAt(0));
+        let timerId: number;
+        const currentText = texts[currentIndex];
 
-        // Function to type the next character.
-        const typeNextCharacter = () => {
-            if (index < text.length) {
-                setOutputText((prev) => prev + text.charAt(index));
-
-                // Calculate the speed for typing the next character.
-                let speed =
-                    typingSpeed +
-                    Math.floor(Math.random() * variance * 2) -
-                    variance;
-                speed = Math.max(speed, 1); // Ensure speed is at least 1 ms.
-
-                index++;
-
-                // Schedule the typing of the next character.
-                timeoutId = setTimeout(typeNextCharacter, speed);
+        if (!isErasing) {
+            if (displayedText.length < currentText.length) {
+                const randomDelay =
+                    TYPING_SPEED - VARIANCE + Math.random() * (VARIANCE * 2);
+                timerId = window.setTimeout(() => {
+                    setDisplayedText(
+                        currentText.substring(0, displayedText.length + 1),
+                    );
+                }, randomDelay);
+            } else if (currentIndex === texts.length - 1) {
+                // If the current text is the last in the array, mark the cycle as completed.
+                setIsCompleted(true);
+            } else {
+                // Once the current text is fully typed, start erasing after a pause.
+                timerId = window.setTimeout(() => setIsErasing(true), PAUSE);
             }
-        };
-
-        // Start the typing effect.
-        typeNextCharacter();
-
-        return () => {
-            if (timeoutId) {
-                clearTimeout(timeoutId);
+        } else {
+            if (displayedText.length > 0) {
+                timerId = window.setTimeout(() => {
+                    setDisplayedText(displayedText.slice(0, -1));
+                }, ERASING_SPEED);
+            } else {
+                setIsErasing(false);
+                // Move to the next text in the array after erasing the current text
+                setCurrentIndex(currentIndex + 1);
             }
-        };
-    }, [text, typingSpeed, variance]);
+        }
 
-    return outputText;
-}
+        return () => clearTimeout(timerId);
+    }, [displayedText, currentIndex, isErasing, texts, isCompleted]);
+
+    return [displayedText, isCompleted];
+};
 
 export default useTypingEffect;
