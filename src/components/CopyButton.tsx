@@ -13,8 +13,6 @@ type CopyButtonProps = {
  * CopyButton component. Used as submit handler for Clamp Generator form.
  * Submission will copy the generated CSS clamp value to the clipboard.
  *
- * Some styling in App.css.
- *
  * @component
  * @param {CopyButtonProps} props - The props for the CopyButton component.
  * @param {string} props.classNames - Additional CSS classes for the button.
