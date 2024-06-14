@@ -206,7 +206,7 @@ const PreviewText = (): JSX.Element => {
                     }}
                     placeholder={isTypingCompleted ? "Enter text here" : ""}
                     className={clsx(
-                        "text-almost-black inline-block w-full overflow-ellipsis rounded-lg border border-transparent bg-transparent px-4 font-medium leading-[2.5] outline outline-2 outline-transparent dark:text-white",
+                        "text-almost-black inline-block w-full overflow-ellipsis rounded-lg border border-transparent bg-transparent px-4 font-medium leading-[2] outline outline-2 outline-transparent dark:text-white",
                         "transition-colors duration-100 ease-out",
                         "focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light hover:focus-visible:bg-transparent",
                         isOverflowing &&
