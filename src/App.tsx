@@ -9,11 +9,6 @@ import Box from "./components/Box";
 import ClampGenerator from "./components/ClampGenerator";
 import PreviewText from "./components/PreviewText";
 import Footer from "./components/Footer";
-import ThemeSelector from "./components/ThemeSelector";
-
-// Assets.
-import codeIcon from "./assets/images/code.svg";
-import codeIconDarkMode from "./assets/images/code-dark-mode.svg";
 
 // Store.
 import { useStore } from "./store/uiToolsStore";
@@ -23,12 +18,6 @@ import "./App.css";
 
 function App() {
     const hasErrors = useStore((state) => state.hasErrors);
-    const theme = useStore((state) => state.theme);
-
-    // Set theme class on document.documentElement.
-    useEffect(() => {
-        document.documentElement.className = theme;
-    }, [theme]);
 
     // Prevent animations on page load.
     useEffect(() => {
@@ -40,25 +29,7 @@ function App() {
 
     return (
         <>
-            <Header>
-                <div className="flex items-center">
-                    <img
-                        src={theme === "dark" ? codeIconDarkMode : codeIcon}
-                        alt="Code icon"
-                        className="h-8 w-8"
-                        aria-hidden="true"
-                    />
-                    <h1
-                        className={clsx(
-                            "text-almost-black ml-2 text-xl font-bold dark:text-white",
-                            "transition-colors duration-100 ease-out",
-                        )}
-                    >
-                        clamp.zone
-                    </h1>
-                </div>
-                <ThemeSelector />
-            </Header>
+            <Header />
             <Main>
                 <Box>
                     <ClampGenerator />

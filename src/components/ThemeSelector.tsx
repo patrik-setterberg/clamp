@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { clsx } from "clsx/lite";
 
 // Store.
@@ -27,6 +28,11 @@ const ThemeSelector = (): JSX.Element => {
         const newTheme = theme === "light" ? "dark" : "light";
         setTheme(newTheme);
     };
+
+    // Set theme class on document.documentElement.
+    useEffect(() => {
+        document.documentElement.className = theme;
+    }, [theme]);
 
     return (
         <button

@@ -1,4 +1,12 @@
-import { ReactNode } from "react";
+// Components.
+import ThemeSelector from "./ThemeSelector";
+
+// Store.
+import { useStore } from "../store/uiToolsStore";
+
+// Assets.
+import codeIcon from "../assets/images/code.svg";
+import codeIconDarkMode from "../assets/images/code-dark-mode.svg";
 
 import { clsx } from "clsx/lite";
 
@@ -9,8 +17,8 @@ import { clsx } from "clsx/lite";
  * @param props.children - The child elements of the header.
  * @returns The rendered header component.
  */
-const Header = (props: { children: ReactNode }): JSX.Element => {
-    const { children } = props;
+const Header = (): JSX.Element => {
+    const theme = useStore((state) => state.theme);
 
     return (
         <header
@@ -19,7 +27,23 @@ const Header = (props: { children: ReactNode }): JSX.Element => {
                 "transition-colors duration-100 ease-out",
             )}
         >
-            {children}
+            <div className="flex items-center">
+                <img
+                    src={theme === "dark" ? codeIconDarkMode : codeIcon}
+                    alt="Code icon"
+                    className="h-8 w-8"
+                    aria-hidden="true"
+                />
+                <h1
+                    className={clsx(
+                        "text-almost-black ml-2 text-xl font-bold dark:text-white",
+                        "transition-colors duration-100 ease-out",
+                    )}
+                >
+                    clamp.zone
+                </h1>
+            </div>
+            <ThemeSelector />
         </header>
     );
 };
