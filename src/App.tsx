@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { clsx } from "clsx/lite";
 
 // Components.
@@ -18,14 +17,6 @@ import "./App.css";
 
 function App() {
     const hasErrors = useStore((state) => state.hasErrors);
-
-    // Prevent animations on page load.
-    useEffect(() => {
-        document.documentElement.classList.add("no-animate");
-        setTimeout(() => {
-            document.documentElement.classList.remove("no-animate");
-        }, 1000);
-    }, []);
 
     return (
         <>
