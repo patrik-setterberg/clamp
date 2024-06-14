@@ -7,17 +7,18 @@ import { useStore } from "../store/uiToolsStore";
 // Helpers.
 import roundToFourDecimals from "../helpers/roundToFourDecimals";
 
+// Hooks.
+import useTypingEffect from "../hooks/useTypingEffect";
+
 /**
  * Renders a preview text component with dynamic font size and visibility effects.
- * The font size is based on the clamp value and
- * the visibility effects are based on the viewport width.
+ * The font size is based on the clamp value and the visibility effects
+ * are based on the viewport width.
  *
  * @returns The rendered PreviewText component.
  */
 const PreviewText = (): JSX.Element => {
-    const [inputValue, setInputValue] = useState<string>(
-        "I, too, am moist (edit me)",
-    );
+    const [inputValue, setInputValue] = useState<string>("");
 
     const clampValue = useStore((state) => state.clampValue);
     const maxViewportWidth = useStore((state) => state.maxViewportWidth);
@@ -85,8 +86,8 @@ const PreviewText = (): JSX.Element => {
      */
     function checkIsOverflowing(): boolean {
         if (previewInputRef.current && previewInputRef.current.parentElement) {
-            const element = previewInputRef.current;
-            const parent = previewInputRef.current.parentElement;
+            const element: HTMLInputElement = previewInputRef.current;
+            const parent: HTMLElement = previewInputRef.current.parentElement;
 
             return (
                 element.scrollWidth > parent.clientWidth ||
@@ -135,6 +136,11 @@ const PreviewText = (): JSX.Element => {
     }, [maxViewportWidth, clampValue, inputValue]);
 
     const maxViewportWidthTimerRef = useRef<number | null>(null);
+
+    /**
+     * Show the preview text background and border for a short duration
+     * when the viewport width is less than the max viewport width.
+     */
     useEffect(() => {
         setBackgroundIsVisible(true);
         setBorderIsVisible(
@@ -151,16 +157,30 @@ const PreviewText = (): JSX.Element => {
         }, 1000);
     }, [maxViewportWidth]);
 
+    let [previewTextDefault, isTypingCompleted] = useTypingEffect([
+        "This is a preview text (edit me)",
+    ]);
+
+    useEffect(() => {
+        if (isTypingCompleted) {
+            setInputValue(previewTextDefault); // Initialize input with the last typed text
+        }
+    }, [isTypingCompleted, previewTextDefault]);
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(event.target.value);
+    };
+
     return (
         <div
             className={clsx(
                 "mx-auto mt-8 flex w-full flex-col items-center rounded-lg border pt-4",
                 "transition-colors duration-500 ease-out",
-                backgroundIsVisible
-                    ? "bg-gray-mist dark:bg-gray-dark"
+                backgroundIsVisible && isTypingCompleted
+                    ? "bg-white-cloud dark:bg-gray-dark"
                     : "bg-transparent",
-                borderIsVisible
-                    ? "border-blue-ocean dark:border-white"
+                borderIsVisible && isTypingCompleted
+                    ? "dark:border-gray-neutral border-[#9e9e9e]"
                     : "border-transparent",
             )}
             style={{
@@ -169,7 +189,7 @@ const PreviewText = (): JSX.Element => {
         >
             <p
                 className={clsx(
-                    "text-almost-black inline-block w-full max-w-box px-4 text-[0.9375rem] dark:text-white",
+                    "text-almost-black inline-block w-full max-w-box px-4 text-xs sm:text-sm dark:text-white",
                     "transition-colors duration-100 ease-out",
                 )}
             >
@@ -184,16 +204,17 @@ const PreviewText = (): JSX.Element => {
                     style={{
                         fontSize: clampValue,
                     }}
-                    placeholder="Enter text here"
+                    placeholder={isTypingCompleted ? "Enter text here" : ""}
                     className={clsx(
-                        "text-almost-black inline-block w-full overflow-ellipsis whitespace-nowrap rounded-lg bg-transparent px-4 font-medium leading-loose outline outline-2 outline-transparent dark:text-white",
-                        "transition-colors !duration-100 ease-out",
-                        "focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light",
+                        "text-almost-black inline-block w-full overflow-ellipsis rounded-lg border border-transparent bg-transparent px-4 font-medium leading-[2.5] outline outline-2 outline-transparent dark:text-white",
+                        "transition-colors duration-100 ease-out",
+                        "focus-visible:outline-blue-soft dark:focus-visible:outline-blue-light hover:focus-visible:bg-transparent",
                         isOverflowing &&
                             "focus-visible:bg-gray-mist dark:focus-visible:bg-gray-dark",
+                        "dark:hover:bg-gray-dark hover:bg-white-cloud",
                     )}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    value={isTypingCompleted ? inputValue : previewTextDefault}
+                    onChange={handleInputChange}
                     id="preview-text"
                 />
                 <label htmlFor="preview-text" className="sr-only">

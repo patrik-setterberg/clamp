@@ -20,9 +20,6 @@ import angleupDarkMode from "../assets/images/angleup-dark-mode.svg";
 import error from "../assets/images/error.svg";
 import info from "../assets/images/info.svg";
 
-// Hooks
-import useTypingEffect from "../hooks/useTypingEffect";
-
 /**
  * A component that generates a CSS clamp value based on user input.
  *
@@ -144,14 +141,6 @@ const ClampGenerator = (): JSX.Element => {
         );
     }, [cautions]);
 
-    const TYPING_SPEED: number = 50;
-    const VARIANCE: number = 20;
-    let title: string = useTypingEffect(
-        "Generate clamp()",
-        TYPING_SPEED,
-        VARIANCE,
-    );
-
     const [copySuccess, setCopySuccess] = useState(false);
 
     /**
@@ -238,11 +227,11 @@ const ClampGenerator = (): JSX.Element => {
                 <div>
                     <h2
                         className={clsx(
-                            "text-almost-black font-mono text-lg font-semibold dark:text-white",
+                            "text-almost-black tracking-wider text-lg font-semibold dark:text-white",
                             "transition-colors duration-100 ease-out",
                         )}
                     >
-                        {title}
+                        Generate clamp()
                     </h2>
                 </div>
             </div>
